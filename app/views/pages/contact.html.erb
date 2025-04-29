@@ -1,0 +1,18 @@
+<h2>Let’s Cultivate the Future Together</h2>
+<p>Have a project idea, partnership proposal, or just want to learn more? Reach out to us — we’d love to connect.</p>
+
+<%= form_with model: ContactSubmission.new, url: contact_submissions_path, local: true do |f| %>
+  <div class="mb-3">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "form-control", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: "form-control", required: true %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :message %>
+    <%= f.text_area :message, class: "form-control", required: true %>
+  </div>
+  <%= f.submit "Send Message", class: "btn btn-success" %>
+<% end %>
