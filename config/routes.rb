@@ -2,10 +2,10 @@ Rails.application.routes.draw do
   root "pages#home"
 
   get "/about", to: "pages#about"
-  get "/services", to: "pages#services"
+  get "/initiatives", to: "pages#initiatives"
   get "/video", to: "pages#video"
   get "/projects", to: "pages#projects"
-  get "/contact", to: "pages#contact"
+  get "/connect", to: "pages#connect"
 
   resources :contact_submissions, only: [:create]
 

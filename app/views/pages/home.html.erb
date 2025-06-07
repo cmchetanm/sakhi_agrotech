@@ -1,37 +1,80 @@
-<div class="container mt-4">
+<main>
   <!-- Hero Section -->
-  <div class="text-center py-5">
-    <h1 class="display-4 text-success">Innovating the Future of Rural Agriculture</h1>
-    <p class="lead">Partnering with nature, science, and communities to create a greener tomorrow.</p>
-    <%= link_to 'Our Projects', projects_path, class: 'btn btn-success btn-lg' %>
-  </div>
-
-  <!-- Image Carousel -->
-    <div id="agroCarousel" class="carousel slide" data-bs-ride="carousel">
-    <div class="carousel-inner">
-        <div class="carousel-item active">
-        <%= image_tag "agri1.jpg.webp", class: "d-block w-100 carousel-img", alt: "Slide 1" %>
-        </div>
-        <div class="carousel-item">
-        <%= image_tag "agri2.jpg", class: "d-block w-100 carousel-img", alt: "Slide 2" %>
-        </div>
-        <div class="carousel-item">
-        <%= image_tag "agri3.jpg.webp", class: "d-block w-100 carousel-img", alt: "Slide 3" %>
-        </div>
+  <section class="position-relative">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% @carousel_images.each_with_index do |carousel_image, index| %>
+          <div class="carousel-item <%= 'active' if index == 0 %>">
+            <%= image_tag url_for(carousel_image.image), class: 'd-block w-100', alt: 'Carousel Image', style: "height: 65vh; object-fit: cover;" %>
+          </div>
+        <% end %>
+      </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#agroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#agroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
-    </div>
+    <!-- Dark overlay -->
+    <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1;"></div>
 
-  <!-- Video Caption Section -->
-  <div class="text-center mt-5">
-    <h4>From Stones to Saplings — Our Journey Begins Here</h4>
+    <!-- Text content on top of the carousel -->
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index: 2;">
+      <h1 class="display-5 fw-bold">Innovating the Future of Rural Agriculture</h1>
+      <p class="lead mt-3">Partnering with nature, science, and communities to create a greener tomorrow.</p>
+    </div>
+  </section>
+
+
+  <!-- Initiatives Section -->
+  <section class="home-initiatives-section py-5">
+  <div class="">
+    <h2 class="text-center mb-5 fw-bold text-success">Our Initiatives</h2>
+
+    <% @initiatives.limit(3).each_with_index do |initiative, index| %>
+      <div class="row align-items-center mb-5 <%= 'flex-row-reverse' if index.odd? %>">
+        <!-- Carousel/Image -->
+        <div class="col-md-6 initiative-preview-left position-relative <%= 'mirrored' if index.odd? %>">
+          <div id="home-initiative-carousel-<%= index %>" class="carousel slide p2-container" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
+            <div class="carousel-inner">
+              <% initiative.images.each_with_index do |img, i| %>
+                <div class="carousel-item <%= 'active' if i == 0 %>">
+                  <%= image_tag img, class: "p2-img" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          
+        </div>
+
+        <!-- Text -->
+        <div class="col-md-6 col-lg-6 text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0">
+
+          <h4 class="fw-bold text-success"><%= initiative.title %></h4>
+          <p class="text-muted"><%= truncate(initiative.description, length: 250) %></p>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="text-center mt-4">
+      <%= link_to 'View All Initiatives', initiatives_path, class: 'btn btn-outline-success' %>
+    </div>
   </div>
-</div>
+</section>
+
+
+  <!-- Team Section --> 
+<section id="team" class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="mb-5">Our Team</h2>
+    <div class="row justify-content-center">
+      <% @team_members.each do |member| %>
+        <div class="col-6 col-sm-4 col-md-3 mb-4">
+          <div class="team-member">
+            <%= image_tag url_for(member.photo), class: "rounded-circle img-fluid mb-3 team-img",style: "width: 100px; height: 100px; object-fit: cover; border-radius: 50%;", alt: member.name %>
+            <h5 class="mb-1"><%= member.name %></h5>
+            <p class="text-muted small mb-0"><%= member.designation %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</section>
+</main>

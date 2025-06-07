@@ -1,0 +1,29 @@
+<% @initiatives.each_with_index do |initiative, index| %>
+  <section class="initiative-section row align-items-center mb-5 <%= 'flex-row-reverse' if index.even? %>">
+    
+    <!-- Image + Carousel -->
+    <div class="col-md-6 initiative-left position-relative <%= 'mirrored' if index.even? %>">
+      <div id="initiative-carousel-<%= index %>" class="carousel slide p2-container" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
+        <div class="carousel-inner">
+          <% initiative.images.each_with_index do |img, i| %>
+            <div class="carousel-item <%= 'active' if i == 0 %>">
+              <%= image_tag img, class: "p2-img" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if initiative.overlay_image.attached? %>
+        <div class="p1-overlay">
+          <%= image_tag initiative.overlay_image, class: "rounded-circle p1-img" %>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- Text -->
+    <div class="col-md-6 initiative-content text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0">
+      <h3 class="initiative-title fw-bold"><%= initiative.title %></h3>
+      <p class="initiative-description"><%= initiative.description %></p>
+    </div>
+  </section>
+<% end %>

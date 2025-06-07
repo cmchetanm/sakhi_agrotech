@@ -103,3 +103,8 @@ Rails.application.configure do
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
+Rails.application.config.to_prepare do
+  ActiveStorage::Current.url_options = {
+    host: 'https://sakhiagrotech.com'
+  }
+end

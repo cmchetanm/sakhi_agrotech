@@ -42,3 +42,184 @@
     object-fit: cover;
   }
   
+  .team-img {
+    border-radius: 50%;              /* Makes it circular */
+    object-fit: cover;               /* Ensures it fills the box */
+    border: 4px solid #e0e0e0;       /* Optional border */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: block;
+    margin: 0 auto;
+  }
+  .team-member {
+    margin-bottom: 2rem;
+  }
+  .initiative-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+}
+
+.initiative-left {
+  height: 100%;
+  min-height: 400px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Carousel clipped with smooth curve */
+.p2-container {
+  width: 100%;
+  height: 100%;
+  clip-path: ellipse(90% 100% at 0% 50%);
+  -webkit-clip-path: ellipse(90% 100% at 0% 50%);
+  overflow: hidden;
+  z-index: 1;
+}
+
+.p2-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+/* Overlay circular image (P1) */
+.p1-overlay {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-90%, -50%);
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+.p1-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.initiative-content {
+  height: 100%;
+  text-align: center;
+  padding: 2rem;
+}
+
+.initiative-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #2e7031; /* Deep green tone */
+}
+
+.initiative-description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #444;
+  max-width: 90%;
+}
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+/* Default curved clipping (right side cut) */
+.p2-container {
+  width: 100%;
+  height: 100%;
+  clip-path: ellipse(90% 100% at 0% 50%);
+  -webkit-clip-path: ellipse(90% 100% at 0% 50%);
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Mirrored: curve on the left side instead */
+.initiative-left.mirrored .p2-container {
+  clip-path: ellipse(90% 100% at 100% 50%);
+  -webkit-clip-path: ellipse(90% 100% at 100% 50%);
+}
+
+/* Default P1 overlay (on right edge) */
+.p1-overlay {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(-90%, -50%);
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+}
+
+/* Mirrored P1 overlay: appears on left edge */
+.initiative-left.mirrored .p1-overlay {
+  left: 0%;
+  transform: translate(-10%, -50%);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+.home-initiatives-section {
+  background-color: #f8fcf7;
+}
+
+/* shared container for clipping and image */
+.initiative-preview-left {
+  height: 400px;
+  overflow: visible;
+}
+
+/* clip the P2 image carousel */
+.initiative-preview-left .p2-container {
+  width: 100%;
+  height: 100%;
+  clip-path: ellipse(90% 100% at 0% 50%);
+  -webkit-clip-path: ellipse(90% 100% at 0% 50%);
+  overflow: hidden;
+}
+
+/* if mirrored (even layout), flip curve to other side */
+.initiative-preview-left.mirrored .p2-container {
+  clip-path: ellipse(90% 100% at 100% 50%);
+  -webkit-clip-path: ellipse(90% 100% at 100% 50%);
+}
+
+
+
+.home-initiatives-section h4 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #2e7031; /* deep green for brand consistency */
+}
+
+.home-initiatives-section p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: #555;
+  max-width: 90%;
+  margin: 0 auto;
+}
+
+
