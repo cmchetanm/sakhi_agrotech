@@ -1,18 +1,51 @@
-<h2>Let’s Cultivate the Future Together</h2>
-<p>Have a project idea, partnership proposal, or just want to learn more? Reach out to us — we’d love to connect.</p>
+<section class="contact-section py-5">
+  <div class="container">
+    <div class="row">
+      <!-- Left: Social Media Links -->
+      <div class="col-md-6 mb-4 mb-md-0 d-flex flex-column justify-content-center align-items-center text-center" data-aos="fade-right">
+        <h2 class="fw-bold mb-4 text-success">Let’s Cultivate the Future Together</h2>
+        <p class="mb-4">Reach out to us — we’d love to connect.</p>
+        <div class="social-links d-flex gap-3 justify-content-center">
+          <%= link_to '#', target: "_blank", class: 'text-dark fs-3' do %>
+            <i class="bi bi-twitter"></i>
+          <% end %>
+          <%= link_to '#', target: "_blank", class: 'text-dark fs-3' do %>
+            <i class="bi bi-instagram"></i>
+          <% end %>
+          <%= link_to '#', target: "_blank", class: 'text-dark fs-3' do %>
+            <i class="bi bi-linkedin"></i>
+          <% end %>
+          <%= link_to '#', target: "_blank", class: 'text-dark fs-3' do %>
+            <i class="bi bi-facebook"></i>
+          <% end %>
+          <%= link_to '#', target: "_blank", class: 'text-dark fs-3' do %>
+            <i class="bi bi-threads"></i>
+          <% end %>
+        </div>
+      </div>
 
-<%= form_with model: ContactSubmission.new, url: contact_submissions_path, local: true do |f| %>
-  <div class="mb-3">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: "form-control", required: true %>
+      <!-- Right: Contact Form -->
+      <div class="col-md-6" data-aos="fade-left">
+        <%= form_with model: @contact_submission, local: true do |f| %>
+          <div class="mb-3">
+            <%= f.label :name, class: 'form-label' %>
+            <%= f.text_field :name, class: 'form-control', required: true %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :email, class: 'form-label' %>
+            <%= f.email_field :email, class: 'form-control', required: true %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :contact, class: 'form-label' %>
+            <%= f.text_field :contact, class: 'form-control', required: true %>
+          </div>
+          <div class="mb-3">
+            <%= f.label :message, class: 'form-label' %>
+            <%= f.text_area :message, class: 'form-control', rows: 4, required: true %>
+          </div>
+          <%= f.submit 'Send Message', class: 'btn btn-success' %>
+        <% end %>
+      </div>
+    </div>
   </div>
-  <div class="mb-3">
-    <%= f.label :email %>
-    <%= f.email_field :email, class: "form-control", required: true %>
-  </div>
-  <div class="mb-3">
-    <%= f.label :message %>
-    <%= f.text_area :message, class: "form-control", required: true %>
-  </div>
-  <%= f.submit "Send Message", class: "btn btn-success" %>
-<% end %>
+</section>

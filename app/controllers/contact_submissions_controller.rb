@@ -12,7 +12,7 @@ class ContactSubmissionsController < ApplicationController
     private
   
     def submission_params
-      params.require(:contact_submission).permit(:name, :email, :message)
+      params.require(:contact_submission).permit(:name, :email, :message, :contact)
     end
   end
   

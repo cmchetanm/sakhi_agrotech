@@ -1,8 +1,8 @@
 <% @initiatives.each_with_index do |initiative, index| %>
-  <section class="initiative-section row align-items-center mb-5 <%= 'flex-row-reverse' if index.even? %>">
+  <section class="initiative-section row align-items-center mb-5 <%= 'flex-row-reverse' if index.even? %>" data-aos="fade-up" data-aos-delay="<%= (index+1) * 100 %>">
     
     <!-- Image + Carousel -->
-    <div class="col-md-6 initiative-left position-relative <%= 'mirrored' if index.even? %>">
+    <div class="col-md-6 initiative-left position-relative <%= 'mirrored' if index.even? %>" data-aos="fade-<%= index.even? ? 'right' : 'left' %>" data-aos-delay="100">
       <div id="initiative-carousel-<%= index %>" class="carousel slide p2-container" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
         <div class="carousel-inner">
           <% initiative.images.each_with_index do |img, i| %>
@@ -21,7 +21,7 @@
     </div>
 
     <!-- Text -->
-    <div class="col-md-6 initiative-content text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0">
+    <div class="col-md-6 initiative-content text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0" data-aos="fade-<%= index.even? ? 'left' : 'right' %>" data-aos-delay="200">
       <h3 class="initiative-title fw-bold"><%= initiative.title %></h3>
       <p class="initiative-description"><%= initiative.description %></p>
     </div>

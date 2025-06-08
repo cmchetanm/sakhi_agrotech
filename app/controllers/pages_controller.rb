@@ -16,7 +16,10 @@ class PagesController < ApplicationController
   end
 
   def projects
+    @projects = Project.includes(project_images_attachments: :blob).order(created_at: :desc)
   end
+
+
 
   def connect
   end

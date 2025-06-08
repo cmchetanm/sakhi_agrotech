@@ -15,7 +15,7 @@
     <div style="position: absolute; top: 0; left: 0; height: 100%; width: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1;"></div>
 
     <!-- Text content on top of the carousel -->
-    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index: 2;">
+    <div class="position-absolute top-50 start-50 translate-middle text-center text-white" style="z-index: 2;" data-aos="fade-up">
       <h1 class="display-5 fw-bold">Innovating the Future of Rural Agriculture</h1>
       <p class="lead mt-3">Partnering with nature, science, and communities to create a greener tomorrow.</p>
     </div>
@@ -23,41 +23,41 @@
 
 
   <!-- Initiatives Section -->
-  <section class="home-initiatives-section py-5">
-  <div class="">
-    <h2 class="text-center mb-5 fw-bold text-success">Our Initiatives</h2>
+  <section class="home-initiatives-section py-5" data-aos="fade-up">
+    <div class="">
+      <h2 class="text-center mb-5 fw-bold text-success">Our Initiatives</h2>
 
-    <% @initiatives.limit(3).each_with_index do |initiative, index| %>
-      <div class="row align-items-center mb-5 <%= 'flex-row-reverse' if index.odd? %>">
-        <!-- Carousel/Image -->
-        <div class="col-md-6 initiative-preview-left position-relative <%= 'mirrored' if index.odd? %>">
-          <div id="home-initiative-carousel-<%= index %>" class="carousel slide p2-container" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
-            <div class="carousel-inner">
-              <% initiative.images.each_with_index do |img, i| %>
-                <div class="carousel-item <%= 'active' if i == 0 %>">
-                  <%= image_tag img, class: "p2-img" %>
-                </div>
-              <% end %>
+      <% @initiatives.limit(3).each_with_index do |initiative, index| %>
+        <div class="row align-items-center mb-5 <%= 'flex-row-reverse' if index.odd? %>">
+          <!-- Carousel/Image -->
+          <div class="col-md-6 initiative-preview-left position-relative <%= 'mirrored' if index.odd? %>"  data-aos="fade-right" data-aos-delay="100">
+            <div id="home-initiative-carousel-<%= index %>" class="carousel slide p2-container" data-bs-ride="carousel" data-bs-interval="3000" data-bs-pause="false">
+              <div class="carousel-inner">
+                <% initiative.images.each_with_index do |img, i| %>
+                  <div class="carousel-item <%= 'active' if i == 0 %>">
+                    <%= image_tag img, class: "p2-img" %>
+                  </div>
+                <% end %>
+              </div>
             </div>
+
+            
           </div>
 
-          
-        </div>
+          <!-- Text -->
+          <div class="col-md-6 col-lg-6 text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0" data-aos="fade-left" data-aos-delay="200">
 
-        <!-- Text -->
-        <div class="col-md-6 col-lg-6 text-center d-flex flex-column justify-content-center align-items-center px-4 mt-4 mt-md-0">
-
-          <h4 class="fw-bold text-success"><%= initiative.title %></h4>
-          <p class="text-muted"><%= truncate(initiative.description, length: 250) %></p>
+            <h4 class="fw-bold text-success"><%= initiative.title %></h4>
+            <p class="text-muted"><%= truncate(initiative.description, length: 250) %></p>
+          </div>
         </div>
+      <% end %>
+
+      <div class="text-center mt-4">
+        <%= link_to 'View All Initiatives', initiatives_path, class: 'btn btn-outline-success' %>
       </div>
-    <% end %>
-
-    <div class="text-center mt-4">
-      <%= link_to 'View All Initiatives', initiatives_path, class: 'btn btn-outline-success' %>
     </div>
-  </div>
-</section>
+  </section>
 
 
   <!-- Team Section --> 

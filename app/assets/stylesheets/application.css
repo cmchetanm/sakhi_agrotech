@@ -223,3 +223,119 @@
 }
 
 
+.projects-section {
+  background-color: #f8fcf7;
+}
+
+.project-carousel {
+  height: 400px;
+  overflow: hidden;
+}
+
+.project-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.project-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* Alternate background tint for visual connection */
+.projects-section .row:nth-child(even) {
+  background-color: #f4f9f4;
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+/* Adjust mirrored layout */
+.project-carousel.mirrored {
+  text-align: right;
+}
+
+body {
+  font-family: 'Lato', sans-serif;
+  font-size: 1.1rem; /* Default was likely 1rem (16px) */
+  line-height: 1.6;
+  color: #333;
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+}
+.footer h5 {
+  font-family: 'Poppins', sans-serif;
+}
+
+.footer p, .footer small, .footer li {
+  font-family: 'Lato', sans-serif;
+}
+.nav-link,
+.footer a {
+  text-decoration: none !important;
+}
+
+.nav-link:hover,
+.footer a:hover {
+  text-decoration: underline; /* optional: restore only on hover */
+}
+.footer a:hover {
+  color: #c8f3c8; /* lighter green on hover */
+}
+
+.footer a,
+.nav-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none;
+}
+
+.footer a::after,
+.nav-link::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: #ffffff;
+  transition: width 0.3s ease;
+}
+
+.footer a:hover::after,
+.nav-link:hover::after {
+  width: 100%;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', sans-serif;
+  color: #2e7031;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+}
+
+h3 {
+  font-size: 1.75rem;
+}
+
+h4 {
+  font-size: 1.4rem;
+}
+@media (min-width: 768px) {
+  body {
+    font-size: 1.15rem;
+  }
+
+  h1 { font-size: 3rem; }
+  h2 { font-size: 2.5rem; }
+}
