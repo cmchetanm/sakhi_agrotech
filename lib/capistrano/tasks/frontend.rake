@@ -27,7 +27,7 @@ namespace :frontend do
     on roles(:app) do
       frontend_dir = release_path.join("frontend")
       execute frontend_shell(
-        "(pm2 restart sakhiagrotech-frontend || pm2 start ecosystem.config.js) && pm2 save",
+        "pm2 delete #{fetch(:frontend_app_name)} 2>/dev/null || true; pm2 start ecosystem.config.js && pm2 save",
         dir: frontend_dir
       )
     end
