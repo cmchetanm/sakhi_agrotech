@@ -11,4 +11,7 @@ require 'capistrano/bundler'
 # Puma (if you're using Puma)
 require 'capistrano/puma'
 
+# Custom deploy tasks
+Dir.glob('lib/capistrano/tasks/*.rake').sort.each { |r| load r }
+
 # SCM
