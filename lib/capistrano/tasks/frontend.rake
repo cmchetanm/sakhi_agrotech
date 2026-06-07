@@ -12,7 +12,11 @@ namespace :frontend do
   task :build do
     on roles(:app) do
       within release_path.join("frontend") do
-        with rails_env: fetch(:rails_env, "production") do
+        with(
+          rails_env: fetch(:rails_env, "production"),
+          RAILS_API_URL: "https://sakhiagrotech.com",
+          NEXT_PUBLIC_SITE_URL: "https://sakhiagrotech.com"
+        ) do
           execute :npm, "run build"
           execute :cp, "-r public .next/standalone/"
           execute :cp, "-r .next/static .next/standalone/.next/"

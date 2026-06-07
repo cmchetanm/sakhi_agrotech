@@ -10,7 +10,7 @@ set :rvm_type, :user
 set :rvm_ruby_version, '3.2.2' # adjust to match your version
 
 # Linked files & directories (customize if needed)
-append :linked_files, "config/master.key"
+append :linked_files, "config/master.key", "config/puma.rb"
 append :linked_dirs, "log", "tmp/pids", "tmp/cache", "tmp/sockets", "public/system", "storage"
 set :branch, "main" # ← change to whatever your main branch is
 
