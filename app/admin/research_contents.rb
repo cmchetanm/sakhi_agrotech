@@ -10,11 +10,11 @@ ActiveAdmin.register ResearchContent do
 
   controller do
     def index
-      redirect_to admin_research_content_path(ResearchContent.instance)
+      redirect_to edit_admin_research_content_path(ResearchContent.instance)
     end
 
     def new
-      redirect_to admin_research_content_path(ResearchContent.instance)
+      redirect_to edit_admin_research_content_path(ResearchContent.instance)
     end
   end
 

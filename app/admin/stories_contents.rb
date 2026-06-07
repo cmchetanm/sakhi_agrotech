@@ -8,11 +8,11 @@ ActiveAdmin.register StoriesContent do
 
   controller do
     def index
-      redirect_to admin_stories_content_path(StoriesContent.instance)
+      redirect_to edit_admin_stories_content_path(StoriesContent.instance)
     end
 
     def new
-      redirect_to admin_stories_content_path(StoriesContent.instance)
+      redirect_to edit_admin_stories_content_path(StoriesContent.instance)
     end
   end
 

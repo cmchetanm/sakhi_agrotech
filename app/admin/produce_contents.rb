@@ -8,11 +8,11 @@ ActiveAdmin.register ProduceContent do
 
   controller do
     def index
-      redirect_to admin_produce_content_path(ProduceContent.instance)
+      redirect_to edit_admin_produce_content_path(ProduceContent.instance)
     end
 
     def new
-      redirect_to admin_produce_content_path(ProduceContent.instance)
+      redirect_to edit_admin_produce_content_path(ProduceContent.instance)
     end
   end
 

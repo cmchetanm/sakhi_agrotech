@@ -11,11 +11,11 @@ ActiveAdmin.register JoinContent do
 
   controller do
     def index
-      redirect_to admin_join_content_path(JoinContent.instance)
+      redirect_to edit_admin_join_content_path(JoinContent.instance)
     end
 
     def new
-      redirect_to admin_join_content_path(JoinContent.instance)
+      redirect_to edit_admin_join_content_path(JoinContent.instance)
     end
   end
 

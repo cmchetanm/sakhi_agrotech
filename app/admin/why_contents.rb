@@ -8,11 +8,11 @@ ActiveAdmin.register WhyContent do
 
   controller do
     def index
-      redirect_to admin_why_content_path(WhyContent.instance)
+      redirect_to edit_admin_why_content_path(WhyContent.instance)
     end
 
     def new
-      redirect_to admin_why_content_path(WhyContent.instance)
+      redirect_to edit_admin_why_content_path(WhyContent.instance)
     end
   end
 

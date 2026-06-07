@@ -9,11 +9,11 @@ ActiveAdmin.register HeroContent do
 
   controller do
     def index
-      redirect_to admin_hero_content_path(HeroContent.instance)
+      redirect_to edit_admin_hero_content_path(HeroContent.instance)
     end
 
     def new
-      redirect_to admin_hero_content_path(HeroContent.instance)
+      redirect_to edit_admin_hero_content_path(HeroContent.instance)
     end
   end
 

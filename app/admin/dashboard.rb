@@ -26,16 +26,16 @@ ActiveAdmin.register_page "Dashboard" do
       column do
         panel "Website sections" do
           ul do
-            li link_to "1. Hero", admin_hero_content_path(HeroContent.instance)
-            li link_to "2. Why Sakhi", admin_why_content_path(WhyContent.instance)
-            li link_to "3. Our Journey", admin_journey_content_path(JourneyContent.instance)
-            li link_to "4. Produce", admin_produce_content_path(ProduceContent.instance)
-            li link_to "5. Research", admin_research_content_path(ResearchContent.instance)
-            li link_to "6. Stories", admin_stories_content_path(StoriesContent.instance)
-            li link_to "7. Team (section text)", admin_team_content_path(TeamContent.instance)
+            li link_to "1. Hero", edit_admin_hero_content_path(HeroContent.instance)
+            li link_to "2. Why Sakhi", edit_admin_why_content_path(WhyContent.instance)
+            li link_to "3. Our Journey", edit_admin_journey_content_path(JourneyContent.instance)
+            li link_to "4. Produce", edit_admin_produce_content_path(ProduceContent.instance)
+            li link_to "5. Research", edit_admin_research_content_path(ResearchContent.instance)
+            li link_to "6. Stories", edit_admin_stories_content_path(StoriesContent.instance)
+            li link_to "7. Team (section text)", edit_admin_team_content_path(TeamContent.instance)
             li link_to "8. Team Members (#{TeamMember.count})", admin_team_members_path
-            li link_to "9. Join", admin_join_content_path(JoinContent.instance)
-            li link_to "10. Footer & Site Info", admin_site_setting_path(SiteSetting.instance)
+            li link_to "9. Join", edit_admin_join_content_path(JoinContent.instance)
+            li link_to "10. Footer & Site Info", edit_admin_site_setting_path(SiteSetting.instance)
           end
         end
 

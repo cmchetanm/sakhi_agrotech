@@ -10,11 +10,11 @@ ActiveAdmin.register SiteSetting do
 
   controller do
     def index
-      redirect_to admin_site_setting_path(SiteSetting.instance)
+      redirect_to edit_admin_site_setting_path(SiteSetting.instance)
     end
 
     def new
-      redirect_to admin_site_setting_path(SiteSetting.instance)
+      redirect_to edit_admin_site_setting_path(SiteSetting.instance)
     end
   end
 
@@ -55,7 +55,7 @@ ActiveAdmin.register SiteSetting do
         if setting.whatsapp_url.present?
           link_to setting.whatsapp_url, setting.whatsapp_url, target: "_blank", rel: "noopener noreferrer"
         else
-          status_tag "Not set"
+          span "Not set", class: "status_tag no"
         end
       end
       row :footer_tagline

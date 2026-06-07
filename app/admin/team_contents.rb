@@ -7,11 +7,11 @@ ActiveAdmin.register TeamContent do
 
   controller do
     def index
-      redirect_to admin_team_content_path(TeamContent.instance)
+      redirect_to edit_admin_team_content_path(TeamContent.instance)
     end
 
     def new
-      redirect_to admin_team_content_path(TeamContent.instance)
+      redirect_to edit_admin_team_content_path(TeamContent.instance)
     end
   end
 

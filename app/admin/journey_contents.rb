@@ -8,11 +8,11 @@ ActiveAdmin.register JourneyContent do
 
   controller do
     def index
-      redirect_to admin_journey_content_path(JourneyContent.instance)
+      redirect_to edit_admin_journey_content_path(JourneyContent.instance)
     end
 
     def new
-      redirect_to admin_journey_content_path(JourneyContent.instance)
+      redirect_to edit_admin_journey_content_path(JourneyContent.instance)
     end
   end
 
