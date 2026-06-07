@@ -1,0 +1,152 @@
+@import "tailwindcss";
+@import "./typography.css";
+
+:root {
+  --cream: #fbf6ee;
+  --sand: #efe5d2;
+  --forest: #33482d;
+  --olive: #66744a;
+  --earth: #6a4531;
+  --gold: #c8a15a;
+  --taupe: #bca689;
+  --charcoal: #2c2b28;
+  /* Lovable semantic aliases → Coolors */
+  --soil: var(--earth);
+  --leaf: var(--forest);
+  --vibrant: var(--olive);
+  --ochre: var(--gold);
+  --terracotta: var(--earth);
+  --foreground: var(--charcoal);
+  --muted-foreground: var(--taupe);
+  --background: var(--cream);
+  --card: #fefcf9;
+  --border: color-mix(in oklab, var(--taupe) 40%, transparent);
+  --ring: var(--olive);
+  --primary: var(--forest);
+  --primary-foreground: var(--cream);
+  --gradient-warm: linear-gradient(135deg, var(--cream) 0%, var(--sand) 100%);
+  --gradient-leaf: linear-gradient(135deg, var(--forest) 0%, var(--olive) 100%);
+  --shadow-soft: 0 10px 30px -12px rgba(106, 69, 49, 0.18);
+  --shadow-warm: 0 20px 40px -16px rgba(106, 69, 49, 0.25);
+}
+
+@theme inline {
+  --color-cream: var(--cream);
+  --color-sand: var(--sand);
+  --color-forest: var(--forest);
+  --color-olive: var(--olive);
+  --color-earth: var(--earth);
+  --color-gold: var(--gold);
+  --color-taupe: var(--taupe);
+  --color-charcoal: var(--charcoal);
+  --color-soil: var(--soil);
+  --color-leaf: var(--leaf);
+  --color-vibrant: var(--vibrant);
+  --color-ochre: var(--ochre);
+  --color-terracotta: var(--terracotta);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-primary-hover: var(--olive);
+  --color-muted: var(--taupe);
+  --color-surface: var(--sand);
+  --color-accent: var(--gold);
+  --font-sans: var(--font-lora);
+  --font-display: var(--font-playfair);
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-lora), "Lora", Georgia, serif;
+  font-size: 17px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+  line-height: 1.15;
+  color: var(--foreground);
+}
+
+.font-display {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+}
+
+.font-body {
+  font-family: var(--font-lora), "Lora", Georgia, serif;
+}
+
+.blob {
+  border-radius: 62% 38% 55% 45% / 50% 60% 40% 50%;
+}
+
+.blob-2 {
+  border-radius: 38% 62% 41% 59% / 55% 41% 59% 45%;
+}
+
+.bg-gradient-warm {
+  background: var(--gradient-warm);
+}
+
+.bg-gradient-leaf {
+  background: var(--gradient-leaf);
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-soft);
+}
+
+.shadow-warm {
+  box-shadow: var(--shadow-warm);
+}
+
+.grain::before {
+  content: "";
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: radial-gradient(rgba(106, 69, 49, 0.06) 1px, transparent 1px);
+  background-size: 4px 4px;
+  position: absolute;
+  inset: 0;
+}
+
+.section-pad {
+  @apply py-24 md:py-32;
+}
+
+.reveal {
+  opacity: 0;
+  transition:
+    opacity 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+    transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+  transform: translateY(24px);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

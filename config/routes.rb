@@ -1,15 +1,15 @@
 Rails.application.routes.draw do
-  root "pages#home"
+  namespace :api do
+    namespace :v1 do
+      resources :carousel_images, only: [ :index ]
+      resources :initiatives, only: [ :index ]
+      resources :projects, only: [ :index ]
+      resources :team_members, only: [ :index ]
+      resources :contact_submissions, only: [ :create ]
+      get "site_config", to: "site_config#show"
+    end
+  end
 
-  get "/about", to: "pages#about"
-  get "/initiatives", to: "pages#initiatives"
-  get "/video", to: "pages#video"
-  get "/projects", to: "pages#projects"
-  get "/connect", to: "pages#connect"
-
-  resources :contact_submissions, only: [:create]
-
-  # ActiveAdmin routes
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 end
