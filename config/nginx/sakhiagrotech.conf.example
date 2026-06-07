@@ -26,8 +26,8 @@ server {
 
   client_max_body_size 20M;
 
-  # Rails: API, admin, Active Storage
-  location ~ ^/(api|rails|admin) {
+  # Rails: API, admin, Active Storage, and Sprockets assets (ActiveAdmin CSS/JS)
+  location ~ ^/(api|rails|admin|assets) {
     proxy_pass http://puma;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
