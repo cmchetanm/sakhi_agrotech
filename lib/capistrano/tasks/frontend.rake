@@ -1,9 +1,13 @@
 namespace :frontend do
+  def frontend_shell(cmd)
+    %Q{bash -lc 'source "$HOME/.nvm/nvm.sh" && #{cmd}'}
+  end
+
   desc "Install frontend dependencies"
   task :install do
     on roles(:app) do
       within release_path.join("frontend") do
-        execute :npm, "ci"
+        execute frontend_shell("npm ci")
       end
     end
   end
@@ -12,15 +16,9 @@ namespace :frontend do
   task :build do
     on roles(:app) do
       within release_path.join("frontend") do
-        with(
-          rails_env: fetch(:rails_env, "production"),
-          RAILS_API_URL: "https://sakhiagrotech.com",
-          NEXT_PUBLIC_SITE_URL: "https://sakhiagrotech.com"
-        ) do
-          execute :npm, "run build"
-          execute :cp, "-r public .next/standalone/"
-          execute :cp, "-r .next/static .next/standalone/.next/"
-        end
+        execute frontend_shell(
+          'RAILS_API_URL="https://sakhiagrotech.com" NEXT_PUBLIC_SITE_URL="https://sakhiagrotech.com" npm run build && cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/'
+        )
       end
     end
   end
@@ -28,7 +26,10 @@ namespace :frontend do
   desc "Restart Next.js via PM2"
   task :restart do
     on roles(:app) do
-      execute :pm2, "restart sakhiagrotech-frontend || pm2 start #{release_path.join('frontend')}/ecosystem.config.js"
+      frontend_dir = release_path.join("frontend")
+      execute frontend_shell(
+        "cd #{frontend_dir} && (pm2 restart sakhiagrotech-frontend || pm2 start ecosystem.config.js) && pm2 save"
+      )
     end
   end
 end
