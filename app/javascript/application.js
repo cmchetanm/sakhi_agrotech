@@ -1,2 +1,3 @@
-// Configure your import map in config/importmap.rb. Read more: https://github.com/rails/importmap-rails
-import "bootstrap"
+// Configure importmap and load application JS.
+import "@hotwired/turbo-rails"
+import "controllers"

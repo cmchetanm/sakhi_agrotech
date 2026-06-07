@@ -1,5 +1,8 @@
 ActiveAdmin.register ContactSubmission do
-  permit_params :name, :email, :contact, :message
+  menu parent: "Inbox", label: "Contact Messages", priority: 1
+
+  actions :index, :show, :destroy
+  config.sort_order = "created_at_desc"
 
   index do
     selectable_column
@@ -7,9 +10,12 @@ ActiveAdmin.register ContactSubmission do
     column :name
     column :email
     column :contact
-    column :message
+    column(:message) { |record| truncate(record.message, length: 60) }
     column :created_at
-    actions
+    actions defaults: false do |record|
+      item "View", admin_contact_submission_path(record)
+      item "Delete", admin_contact_submission_path(record), method: :delete, data: { confirm: "Delete this message?" }
+    end
   end
 
   filter :name
@@ -22,7 +28,9 @@ ActiveAdmin.register ContactSubmission do
       row :name
       row :email
       row :contact
-      row :message
+      row :message do |record|
+        simple_format(record.message)
+      end
       row :created_at
     end
   end

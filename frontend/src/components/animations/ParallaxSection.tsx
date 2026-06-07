@@ -1,8 +1,9 @@
 "use client";
 
 import { useRef, type ReactNode } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useGSAP } from "@/lib/gsap";
 import clsx from "clsx";
+import { scrubParallax } from "@/lib/animations/scrollReveal";
 
 interface ParallaxSectionProps {
   children: ReactNode;
@@ -19,16 +20,10 @@ export default function ParallaxSection({
 
   useGSAP(
     () => {
-      gsap.to(ref.current, {
-        yPercent: speed * 100,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: true,
-        },
+      const mm = scrubParallax(ref.current, ref.current, {
+        y: speed * -100,
       });
+      return () => mm.revert();
     },
     { scope: ref }
   );

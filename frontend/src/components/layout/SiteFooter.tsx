@@ -1,6 +1,12 @@
+"use client";
+
+import { useRef } from "react";
 import Link from "next/link";
-import { FOOTER } from "@/content/site";
+import { useGSAP } from "@/lib/gsap";
 import { SITE_NAME } from "@/lib/constants";
+import { bindSocialHover } from "@/lib/animations/hoverEffects";
+import { revealOnScroll } from "@/lib/animations/scrollReveal";
+import type { MergedHomepageContent } from "@/types/api";
 
 function InstagramIcon() {
   return (
@@ -20,14 +26,36 @@ function LinkedInIcon() {
   );
 }
 
-export default function SiteFooter() {
+interface SiteFooterProps {
+  content: MergedHomepageContent["footer"];
+}
+
+export default function SiteFooter({ content }: SiteFooterProps) {
+  const ref = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const mmReveal = revealOnScroll(ref.current, "[data-reveal]", {
+        stagger: 0.1,
+      });
+
+      const cleanupSocial = bindSocialHover(ref.current?.querySelectorAll(".footer-social-link") ?? null);
+
+      return () => {
+        mmReveal.revert();
+        cleanupSocial();
+      };
+    },
+    { scope: ref }
+  );
+
   return (
-    <footer id="footer" className="relative overflow-hidden bg-soil text-cream">
+    <footer id="footer" ref={ref} className="relative overflow-hidden bg-soil text-cream">
       <div className="grain pointer-events-none absolute inset-0" />
 
       <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 md:grid-cols-12">
-          <div className="md:col-span-5">
+          <div data-reveal className="md:col-span-5">
             <div className="flex items-center gap-2">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream font-display text-lg text-soil">
                 स
@@ -35,16 +63,16 @@ export default function SiteFooter() {
               <span className="font-display text-2xl">{SITE_NAME}</span>
             </div>
             <p className="mt-5 max-w-sm font-display text-xl leading-snug text-cream/90">
-              {FOOTER.tagline}{" "}
-              <em className="not-italic text-ochre">{FOOTER.taglineHighlight}</em>
+              {content.tagline}{" "}
+              <em className="not-italic text-ochre">{content.taglineHighlight}</em>
             </p>
-            <p className="mt-4 max-w-sm text-sm text-cream/70">{FOOTER.description}</p>
+            <p className="mt-4 max-w-sm text-sm text-cream/70">{content.description}</p>
           </div>
 
-          <div className="md:col-span-3">
+          <div data-reveal className="md:col-span-3">
             <h4 className="font-display text-lg text-ochre">Explore</h4>
             <ul className="mt-4 space-y-2 text-sm text-cream/80">
-              {FOOTER.explore.map((link) => (
+              {content.explore.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className="hover:text-cream">
                     {link.label}
@@ -54,25 +82,26 @@ export default function SiteFooter() {
             </ul>
           </div>
 
-          <div className="md:col-span-4">
+          <div data-reveal className="md:col-span-4">
             <h4 className="font-display text-lg text-ochre">Find us</h4>
             <ul className="mt-4 space-y-2 text-sm text-cream/80">
-              <li>{FOOTER.contact.location}</li>
+              <li>{content.contact.location}</li>
               <li>
-                <a href={`mailto:${FOOTER.contact.email}`} className="hover:text-cream">
-                  {FOOTER.contact.email}
+                <a href={`mailto:${content.contact.email}`} className="hover:text-cream">
+                  {content.contact.email}
                 </a>
               </li>
             </ul>
             <div className="mt-5 flex gap-3">
-              {FOOTER.social.map((link) => (
+              {content.social.map((link) => (
                 <a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.label}
-                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-cream/20"
+                  data-reveal
+                  className="footer-social-link inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream/10 transition-colors hover:bg-cream/20"
                 >
                   {link.label === "Instagram" ? <InstagramIcon /> : <LinkedInIcon />}
                 </a>
@@ -81,9 +110,12 @@ export default function SiteFooter() {
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col justify-between gap-3 border-t border-cream/15 pt-6 text-xs text-cream/60 sm:flex-row">
-          <p>{FOOTER.copyright}</p>
-          <p>{FOOTER.madeIn}</p>
+        <div
+          data-reveal
+          className="mt-14 flex flex-col justify-between gap-3 border-t border-cream/15 pt-6 text-xs text-cream/60 sm:flex-row"
+        >
+          <p>{content.copyright}</p>
+          <p>{content.madeIn}</p>
         </div>
       </div>
     </footer>

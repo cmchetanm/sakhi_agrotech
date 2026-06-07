@@ -2,10 +2,15 @@
 
 import { useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { JOIN } from "@/content/site";
 import { submitContact } from "@/lib/api";
+import { bindButtonHover, bindCardHover } from "@/lib/animations/hoverEffects";
+import { revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
+import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
+import { markRevealed } from "@/lib/animations/reveal";
+import type { MergedHomepageContent } from "@/types/api";
 
 interface JoinSectionProps {
+  content: MergedHomepageContent["join"];
   whatsappNumber?: string | null;
 }
 
@@ -14,29 +19,69 @@ function whatsappUrl(number: string | null | undefined) {
   return digits ? `https://wa.me/${digits}` : null;
 }
 
-export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
+export default function JoinSection({ content, whatsappNumber }: JoinSectionProps) {
   const ref = useRef<HTMLElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   useGSAP(
     () => {
-      gsap.from(".join-left > *", {
-        opacity: 0,
-        y: 30,
-        stagger: 0.12,
-        duration: 0.7,
-        scrollTrigger: { trigger: ref.current, start: "top 70%", toggleActions: "play none none reverse" },
+      const mmIntro = revealSectionIntro(
+        ref.current,
+        {
+          label: ".join-label",
+          headline: ".join-headline",
+          body: ".join-body",
+        },
+        REFRESH_PRIORITY.join
+      );
+
+      const mmActions = revealOnScroll(ref.current, ".join-action", {
+        stagger: 0.1,
       });
 
-      gsap.from(".join-form", {
-        opacity: 0,
-        y: 50,
-        duration: 0.8,
-        scrollTrigger: { trigger: ".join-form", start: "top 85%", toggleActions: "play none none reverse" },
+      const mmFields = revealOnScroll(ref.current, ".join-field", {
+        start: "top 86%",
+        stagger: 0.08,
       });
+
+      const cleanupActions = bindCardHover(ref.current?.querySelectorAll(".join-action") ?? null, {
+        lift: -3,
+        scale: 1.01,
+      });
+      const cleanupSubmit = bindButtonHover(ref.current?.querySelectorAll(".join-submit") ?? null);
+
+      return () => {
+        mmIntro.revert();
+        mmActions.revert();
+        mmFields.revert();
+        cleanupActions();
+        cleanupSubmit();
+      };
     },
     { scope: ref }
+  );
+
+  useGSAP(
+    () => {
+      if (status !== "success" || !successRef.current) return;
+      gsap.fromTo(
+        successRef.current,
+        { opacity: 0, y: 16 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          clearProps: "transform,opacity",
+          onComplete() {
+            markRevealed(successRef.current!);
+          },
+        }
+      );
+    },
+    { dependencies: [status] }
   );
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -79,9 +124,11 @@ export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
   const chatUrl = whatsappUrl(whatsappNumber);
   const joinActions = [
     ...(chatUrl
-      ? [{ ...JOIN.actions[0], href: chatUrl }]
-      : []),
-    JOIN.actions[1],
+      ? [{ ...content.actions[0], href: chatUrl }]
+      : content.actions[0]
+        ? [content.actions[0]]
+        : []),
+    ...(content.actions[1] ? [content.actions[1]] : []),
   ];
 
   return (
@@ -90,22 +137,27 @@ export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
 
       <div className="relative mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-12">
         <div className="join-left lg:col-span-5">
-          <span className="text-label">{JOIN.label}</span>
-          <h2 className="mt-3 font-display text-4xl text-soil sm:text-5xl">
-            {JOIN.headline.before}
-            <em className="not-italic text-leaf">{JOIN.headline.highlight}</em>
-            {JOIN.headline.after}
+          <span data-reveal className="join-label text-label">
+            {content.label}
+          </span>
+          <h2 data-reveal className="join-headline mt-3 font-display text-4xl text-soil sm:text-5xl">
+            {content.headline.before}
+            <em className="not-italic text-leaf">{content.headline.highlight}</em>
+            {content.headline.after}
           </h2>
-          <p className="mt-5 text-foreground/75">{JOIN.body}</p>
+          <p data-reveal className="join-body mt-5 text-foreground/75">
+            {content.body}
+          </p>
 
           <div className="mt-8 space-y-4">
             {joinActions.map((action) => (
               <a
                 key={action.title}
+                data-reveal
                 href={action.href}
                 target={action.href.startsWith("http") || action.href.startsWith("mailto") ? "_blank" : undefined}
                 rel={action.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="flex items-center justify-between gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft transition-transform hover:-translate-y-0.5"
+                className="join-action flex items-center justify-between gap-4 rounded-2xl border border-border/60 bg-card p-5 shadow-soft"
               >
                 <div>
                   <p className="font-display text-lg text-soil">{action.title}</p>
@@ -119,45 +171,48 @@ export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
 
         <div className="join-form lg:col-span-7">
           {status === "success" ? (
-            <div className="rounded-3xl border border-border/60 bg-card p-7 text-center shadow-warm sm:p-9">
+            <div
+              ref={successRef}
+              className="rounded-3xl border border-border/60 bg-card p-7 text-center shadow-warm sm:p-9"
+            >
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-leaf/15 text-3xl">
                 🌿
               </div>
               <h3 className="mt-5 font-display text-2xl text-soil">Thank you. We&apos;ll be in touch.</h3>
-              <p className="mt-3 text-foreground/70">{JOIN.successMessage}</p>
+              <p className="mt-3 text-foreground/70">{content.successMessage}</p>
             </div>
           ) : (
             <form
               onSubmit={handleSubmit}
               className="rounded-3xl border border-border/60 bg-card p-7 shadow-warm sm:p-9"
             >
-              <h3 className="font-display text-2xl text-soil">{JOIN.formTitle}</h3>
+              <h3 className="font-display text-2xl text-soil">{content.formTitle}</h3>
               <div className="mt-6 grid gap-5 sm:grid-cols-2">
-                <div>
+                <div data-reveal className="join-field">
                   <label htmlFor="name" className="mb-2 block text-sm font-medium text-soil">
                     Your name
                   </label>
                   <input id="name" name="name" required maxLength={200} className={inputClass} />
                 </div>
-                <div>
+                <div data-reveal className="join-field">
                   <label htmlFor="email" className="mb-2 block text-sm font-medium text-soil">
                     Email
                   </label>
                   <input id="email" name="email" type="email" required maxLength={200} className={inputClass} />
                 </div>
-                <div>
+                <div data-reveal className="join-field">
                   <label htmlFor="phone" className="mb-2 block text-sm font-medium text-soil">
                     Phone
                   </label>
                   <input id="phone" name="phone" type="tel" maxLength={200} className={inputClass} />
                 </div>
-                <div>
+                <div data-reveal className="join-field">
                   <label htmlFor="city" className="mb-2 block text-sm font-medium text-soil">
                     City
                   </label>
                   <input id="city" name="city" maxLength={200} className={inputClass} />
                 </div>
-                <div className="sm:col-span-2">
+                <div data-reveal className="join-field sm:col-span-2">
                   <label htmlFor="interest" className="mb-2 block text-sm font-medium text-soil">
                     I&apos;m interested in
                   </label>
@@ -165,14 +220,14 @@ export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
                     <option value="" disabled>
                       Choose one
                     </option>
-                    {JOIN.interests.map((opt) => (
+                    {content.interests.map((opt) => (
                       <option key={opt} value={opt}>
                         {opt}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="sm:col-span-2">
+                <div data-reveal className="join-field sm:col-span-2">
                   <label htmlFor="message" className="mb-2 block text-sm font-medium text-soil">
                     Anything you&apos;d like us to know?{" "}
                     <span className="font-normal text-muted-foreground">(optional)</span>
@@ -192,9 +247,9 @@ export default function JoinSection({ whatsappNumber }: JoinSectionProps) {
               <button
                 type="submit"
                 disabled={status === "loading"}
-                className="mt-7 inline-flex w-full items-center justify-center rounded-full bg-leaf px-7 py-3.5 font-medium text-primary-foreground shadow-warm transition hover:bg-vibrant disabled:opacity-60 sm:w-auto"
+                className="join-submit mt-7 inline-flex w-full items-center justify-center rounded-full bg-leaf px-7 py-3.5 font-medium text-primary-foreground shadow-warm transition-colors hover:bg-vibrant disabled:opacity-60 sm:w-auto"
               >
-                {status === "loading" ? "Sending…" : JOIN.submitLabel}
+                {status === "loading" ? "Sending…" : content.submitLabel}
               </button>
             </form>
           )}

@@ -1,43 +1,61 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { PRODUCE } from "@/content/site";
-import { IMAGES } from "@/lib/assets";
+import { useGSAP } from "@/lib/gsap";
 import StaticPhoto from "@/components/ui/StaticPhoto";
-import type { Initiative } from "@/types/api";
+import SiteIcon from "@/components/ui/SiteIcon";
+import { bindButtonHover, bindCardHover } from "@/lib/animations/hoverEffects";
+import { revealFrom, revealOnScroll, revealSectionIntro, scrubParallax } from "@/lib/animations/scrollReveal";
+import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
+import type { MergedHomepageContent } from "@/types/api";
 
 interface ProduceSectionProps {
-  initiatives: Initiative[];
+  content: MergedHomepageContent["produce"];
 }
 
-export default function ProduceSection({ initiatives: _initiatives }: ProduceSectionProps) {
+export default function ProduceSection({ content }: ProduceSectionProps) {
   const ref = useRef<HTMLElement>(null);
-  const basketImage = IMAGES.produceBasket;
 
   useGSAP(
     () => {
-      gsap.from(".produce-header", {
-        opacity: 0,
-        y: 40,
-        duration: 0.8,
-        scrollTrigger: { trigger: ref.current, start: "top 75%", toggleActions: "play none none reverse" },
+      const mmIntro = revealSectionIntro(
+        ref.current,
+        {
+          label: ".produce-label",
+          headline: ".produce-headline",
+          body: ".produce-body",
+        },
+        REFRESH_PRIORITY.produce
+      );
+
+      const mmBasket = revealFrom(
+        ref.current,
+        ".produce-basket",
+        { scale: 0.92, rotation: -4 },
+        { start: "top 72%", refreshPriority: REFRESH_PRIORITY.produce }
+      );
+
+      const mmReveal = revealOnScroll(ref.current, ".produce-card", {
+        staggerFrom: "center",
       });
 
-      gsap.from(".produce-basket", {
-        opacity: 0,
-        scale: 0.8,
-        rotation: -5,
-        duration: 1,
-        scrollTrigger: { trigger: ref.current, start: "top 70%", toggleActions: "play none none reverse" },
-      });
+      const mmParallax = scrubParallax(
+        ref.current?.querySelector(".produce-basket-inner"),
+        ref.current,
+        { y: -20, refreshPriority: REFRESH_PRIORITY.produce }
+      );
 
-      ScrollTrigger.batch(".produce-card", {
-        start: "top 90%",
-        onEnter: (batch) =>
-          gsap.from(batch, { opacity: 0, y: 50, stagger: 0.1, duration: 0.6, ease: "power2.out" }),
-        once: true,
-      });
+      const cleanupCards = bindCardHover(ref.current?.querySelectorAll(".produce-card") ?? null);
+      const cleanupBtn = bindButtonHover(ref.current?.querySelectorAll(".produce-cta-btn") ?? null);
+
+      return () => {
+        mmIntro.revert();
+        mmBasket.revert();
+        mmReveal.revert();
+        mmParallax.revert();
+        cleanupCards();
+        cleanupBtn();
+      };
     },
     { scope: ref }
   );
@@ -50,29 +68,39 @@ export default function ProduceSection({ initiatives: _initiatives }: ProduceSec
       <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
         <div className="produce-header grid items-end gap-12 lg:grid-cols-12">
           <div className="lg:col-span-7">
-            <span className="text-sm font-medium uppercase tracking-[0.2em] text-ochre">{PRODUCE.label}</span>
-            <h2 className="mt-3 font-display text-4xl text-cream sm:text-5xl">{PRODUCE.headline}</h2>
-            <p className="mt-5 max-w-xl text-cream/75">{PRODUCE.body}</p>
+            <span data-reveal className="produce-label text-sm font-medium uppercase tracking-[0.2em] text-ochre">
+              {content.label}
+            </span>
+            <h2 data-reveal className="produce-headline mt-3 font-display text-4xl text-cream sm:text-5xl">
+              {content.headline}
+            </h2>
+            <p data-reveal className="produce-body mt-5 max-w-xl text-cream/75">
+              {content.body}
+            </p>
           </div>
-          <div className="produce-basket w-full lg:col-span-5">
-            <StaticPhoto
-              src={basketImage}
-              alt="Basket of fresh organic vegetables with soil still on roots"
-              width={1024}
-              height={1024}
-              className="block h-64 w-full object-cover object-center blob shadow-warm lg:h-72"
-            />
+          <div data-reveal className="produce-basket w-full overflow-hidden lg:col-span-5">
+            <div className="produce-basket-inner">
+              <StaticPhoto
+                src={content.basketImage}
+                alt="Basket of fresh organic vegetables with soil still on roots"
+                width={1024}
+                height={1024}
+                className="block h-64 w-full object-cover object-center blob shadow-warm lg:h-72"
+              />
+            </div>
           </div>
         </div>
 
         <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {PRODUCE.items.map((item, index) => (
+          {content.items.map((item) => (
             <div
               key={item.title}
-              className="produce-card group rounded-3xl border border-cream/10 bg-cream/5 p-6 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:bg-cream/10"
-              style={{ transitionDelay: `${index * 50}ms` }}
+              data-reveal
+              className="produce-card group rounded-3xl border border-cream/10 bg-cream/5 p-6 backdrop-blur-sm"
             >
-              <div className="text-3xl">{item.emoji}</div>
+              <div className="transition-transform duration-300 group-hover:scale-110">
+                <SiteIcon src={item.iconSrc} alt="" size={32} className="brightness-0 invert" />
+              </div>
               <h3 className="mt-4 font-display text-2xl text-cream">{item.title}</h3>
               <p className="mt-2 text-sm text-cream/70">{item.description}</p>
               <p className="mt-4 text-xs uppercase tracking-widest text-ochre">{item.stat}</p>
@@ -83,9 +111,9 @@ export default function ProduceSection({ initiatives: _initiatives }: ProduceSec
         <div className="produce-cta mt-12">
           <a
             href="#join"
-            className="inline-flex items-center rounded-full bg-ochre px-6 py-3 font-medium text-soil shadow-warm transition hover:bg-cream"
+            className="produce-cta-btn inline-flex items-center rounded-full bg-ochre px-6 py-3 font-medium text-soil shadow-warm transition-colors hover:bg-cream"
           >
-            {PRODUCE.cta}
+            {content.cta}
           </a>
         </div>
       </div>

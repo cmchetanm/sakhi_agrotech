@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Lora, Playfair_Display } from "next/font/google";
 import Header from "@/components/layout/Header";
-import RevealProvider from "@/components/providers/RevealProvider";
 import SmoothScrollProvider from "@/components/providers/SmoothScrollProvider";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TAGLINE } from "@/lib/constants";
 import "./globals.css";
@@ -39,10 +38,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lora.variable} ${playfair.variable} min-h-screen bg-background text-foreground antialiased`}>
         <SmoothScrollProvider>
-          <RevealProvider>
-            <Header />
-            <main>{children}</main>
-          </RevealProvider>
+          <Header />
+          <main>{children}</main>
         </SmoothScrollProvider>
       </body>
     </html>

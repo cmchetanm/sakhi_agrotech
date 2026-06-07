@@ -1,0 +1,11 @@
+json.partial! "api/v1/homepage/homepage",
+              site: @site,
+              hero: @hero,
+              why: @why,
+              journey: @journey,
+              produce: @produce,
+              research: @research,
+              stories: @stories,
+              team: @team,
+              team_members: @team_members,
+              join: @join

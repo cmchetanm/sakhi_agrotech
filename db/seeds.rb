@@ -13,4 +13,7 @@ else
 end
 
 SiteSetting.instance
-puts "Site settings seeded (WhatsApp: #{SiteSetting.instance.whatsapp_number})"
+require Rails.root.join("lib/homepage_defaults")
+HomepageDefaults.seed!
+puts "Homepage content seeded."
+puts "Site settings ready (WhatsApp: #{SiteSetting.instance.whatsapp_number})"

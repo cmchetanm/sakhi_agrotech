@@ -3,6 +3,9 @@
 import { useRef, type ReactNode } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import clsx from "clsx";
+import { createMatchMedia, getMotionSettings, MEDIA_CONDITIONS } from "@/lib/animations/matchMediaContext";
+import { DEV_MARKERS } from "@/lib/animations/presets";
+import { prepareRevealTargets, revealCompleteVars, showRevealTargets } from "@/lib/animations/reveal";
 
 interface FadeInStaggerProps {
   children: ReactNode;
@@ -21,21 +24,39 @@ export default function FadeInStagger({
 
   useGSAP(
     () => {
-      const items = ref.current?.querySelectorAll(childSelector);
-      if (!items?.length) return;
+      const mm = createMatchMedia();
+      mm.add(MEDIA_CONDITIONS, (context) => {
+        const motion = getMotionSettings(context.conditions);
+        if (!ref.current) return;
 
-      gsap.from(items, {
-        opacity: 0,
-        y: 30,
-        duration: 0.7,
-        stagger,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: ref.current,
-          start: "top 80%",
-          toggleActions: "play none none reverse",
-        },
+        if (motion.duration === 0) {
+          showRevealTargets(ref.current, childSelector);
+          return;
+        }
+
+        prepareRevealTargets(ref.current, childSelector, motion.travel);
+
+        gsap.fromTo(
+          ref.current.querySelectorAll(childSelector),
+          { opacity: 0, y: motion.travel },
+          {
+            ...revealCompleteVars(),
+            duration: motion.duration,
+            stagger: stagger || motion.stagger,
+            ease: "power2.out",
+            immediateRender: false,
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 80%",
+              toggleActions: "play none none none",
+              once: true,
+              markers: DEV_MARKERS,
+            },
+          }
+        );
       });
+
+      return () => mm.revert();
     },
     { scope: ref }
   );

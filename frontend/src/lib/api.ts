@@ -1,11 +1,7 @@
 import type {
-  CarouselImage,
   ContactSubmissionPayload,
   ContactSubmissionResponse,
-  Initiative,
-  Project,
-  SiteConfig,
-  TeamMember,
+  HomepageApiResponse,
 } from "@/types/api";
 
 function getApiBaseUrl(): string {
@@ -35,24 +31,8 @@ async function fetchApi<T>(path: string, options?: RequestInit): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-export function getCarouselImages(): Promise<CarouselImage[]> {
-  return fetchApi<CarouselImage[]>("/api/v1/carousel_images");
-}
-
-export function getInitiatives(): Promise<Initiative[]> {
-  return fetchApi<Initiative[]>("/api/v1/initiatives");
-}
-
-export function getProjects(): Promise<Project[]> {
-  return fetchApi<Project[]>("/api/v1/projects");
-}
-
-export function getTeamMembers(): Promise<TeamMember[]> {
-  return fetchApi<TeamMember[]>("/api/v1/team_members");
-}
-
-export function getSiteConfig(): Promise<SiteConfig> {
-  return fetchApi<SiteConfig>("/api/v1/site_config");
+export function getHomepageContent(): Promise<HomepageApiResponse> {
+  return fetchApi<HomepageApiResponse>("/api/v1/homepage");
 }
 
 export async function submitContact(

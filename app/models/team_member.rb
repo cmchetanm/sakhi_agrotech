@@ -1,6 +1,9 @@
 class TeamMember < ApplicationRecord
   has_one_attached :photo
-  def self.ransackable_attributes(auth_object = nil)
-    ["created_at", "designation", "id", "name", "updated_at"]
+
+  scope :ordered, -> { order(:position, :id) }
+
+  def self.ransackable_attributes(_auth_object = nil)
+    %w[created_at description designation id name position updated_at]
   end
 end

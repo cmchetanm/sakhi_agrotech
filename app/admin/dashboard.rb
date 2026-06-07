@@ -1,33 +1,54 @@
 # frozen_string_literal: true
-ActiveAdmin.register_page "Dashboard" do
-  menu priority: 1, label: proc { I18n.t("active_admin.dashboard") }
 
-  content title: proc { I18n.t("active_admin.dashboard") } do
-    div class: "blank_slate_container", id: "dashboard_default_message" do
-      span class: "blank_slate" do
-        span I18n.t("active_admin.dashboard_welcome.welcome")
-        small I18n.t("active_admin.dashboard_welcome.call_to_action")
+ActiveAdmin.register_page "Dashboard" do
+  menu priority: 1, label: "Dashboard"
+
+  content title: "Dashboard" do
+    columns do
+      column do
+        panel "Recent contact messages" do
+          submissions = ContactSubmission.order(created_at: :desc).limit(8)
+
+          if submissions.any?
+            table_for submissions do
+              column(:name) { |s| link_to s.name, admin_contact_submission_path(s) }
+              column :email
+              column(:message) { |s| truncate(s.message, length: 60) }
+              column(:received) { |s| l(s.created_at, format: :short) }
+            end
+            para link_to "View all messages →", admin_contact_submissions_path
+          else
+            para "No messages yet."
+          end
+        end
+      end
+
+      column do
+        panel "Website sections" do
+          ul do
+            li link_to "1. Hero", admin_hero_content_path(HeroContent.instance)
+            li link_to "2. Why Sakhi", admin_why_content_path(WhyContent.instance)
+            li link_to "3. Our Journey", admin_journey_content_path(JourneyContent.instance)
+            li link_to "4. Produce", admin_produce_content_path(ProduceContent.instance)
+            li link_to "5. Research", admin_research_content_path(ResearchContent.instance)
+            li link_to "6. Stories", admin_stories_content_path(StoriesContent.instance)
+            li link_to "7. Team (section text)", admin_team_content_path(TeamContent.instance)
+            li link_to "8. Team Members (#{TeamMember.count})", admin_team_members_path
+            li link_to "9. Join", admin_join_content_path(JoinContent.instance)
+            li link_to "10. Footer & Site Info", admin_site_setting_path(SiteSetting.instance)
+          end
+        end
+
+        panel "Quick links" do
+          ul do
+            li link_to "View live site",
+                       ENV.fetch("FRONTEND_URL", "https://sakhiagrotech.com"),
+                       target: "_blank",
+                       rel: "noopener noreferrer"
+            li link_to "Manage admin users", admin_admin_users_path
+          end
+        end
       end
     end
-
-    # Here is an example of a simple dashboard with columns and panels.
-    #
-    # columns do
-    #   column do
-    #     panel "Recent Posts" do
-    #       ul do
-    #         Post.recent(5).map do |post|
-    #           li link_to(post.title, admin_post_path(post))
-    #         end
-    #       end
-    #     end
-    #   end
-
-    #   column do
-    #     panel "Info" do
-    #       para "Welcome to ActiveAdmin."
-    #     end
-    #   end
-    # end
-  end # content
+  end
 end

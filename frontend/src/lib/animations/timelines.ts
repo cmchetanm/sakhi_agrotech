@@ -1,4 +1,5 @@
-import { gsap } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { DEV_MARKERS } from "./presets";
 
 export function prefersReducedMotion(): boolean {
   if (typeof window === "undefined") return false;
@@ -19,5 +20,26 @@ export function animateCounter(
     onUpdate: () => {
       el.textContent = `${Math.round(obj.val)}${suffix}`;
     },
+  });
+}
+
+export function animateCounterOnEnter(
+  el: HTMLElement,
+  end: number,
+  suffix = "",
+  trigger: Element | null,
+  duration = 1.2
+) {
+  if (!trigger || prefersReducedMotion()) {
+    el.textContent = `${end}${suffix}`;
+    return;
+  }
+
+  ScrollTrigger.create({
+    trigger: el,
+    start: "top 90%",
+    once: true,
+    markers: DEV_MARKERS,
+    onEnter: () => animateCounter(el, end, suffix, duration),
   });
 }

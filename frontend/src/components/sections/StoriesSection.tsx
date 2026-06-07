@@ -1,34 +1,50 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
-import { STORIES } from "@/content/site";
+import { useGSAP } from "@/lib/gsap";
+import { bindCardHover } from "@/lib/animations/hoverEffects";
+import { revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
+import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
+import type { MergedHomepageContent } from "@/types/api";
 
-function QuoteIcon() {
+function QuoteIcon({ className }: { className?: string }) {
   return (
-    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className="text-ochre">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" className={className ?? "text-ochre"}>
       <path d="M7 7h4v4H7c0 2 1 3 3 3v3c-4 0-6-3-6-6V7zm9 0h4v4h-4c0 2 1 3 3 3v3c-4 0-6-3-6-6V7z" />
     </svg>
   );
 }
 
-export default function StoriesSection() {
+interface StoriesSectionProps {
+  content: MergedHomepageContent["stories"];
+}
+
+export default function StoriesSection({ content }: StoriesSectionProps) {
   const ref = useRef<HTMLElement>(null);
 
   useGSAP(
     () => {
-      ScrollTrigger.batch(".story-card", {
-        start: "top 85%",
-        onEnter: (batch) =>
-          gsap.from(batch, {
-            opacity: 0,
-            y: 40,
-            stagger: 0.15,
-            duration: 0.7,
-            ease: "power2.out",
-          }),
-        once: true,
+      const mmIntro = revealSectionIntro(
+        ref.current,
+        {
+          label: ".stories-label",
+          headline: ".stories-headline",
+          body: ".stories-body",
+        },
+        REFRESH_PRIORITY.stories
+      );
+
+      const mmReveal = revealOnScroll(ref.current, ".story-card", {
+        stagger: 0.12,
       });
+
+      const cleanupCards = bindCardHover(ref.current?.querySelectorAll(".story-card") ?? null);
+
+      return () => {
+        mmIntro.revert();
+        mmReveal.revert();
+        cleanupCards();
+      };
     },
     { scope: ref }
   );
@@ -36,21 +52,25 @@ export default function StoriesSection() {
   return (
     <section id="stories" ref={ref} className="relative bg-gradient-warm py-24 md:py-32">
       <div className="mx-auto max-w-5xl px-5 text-center sm:px-8">
-        <span className="text-label">{STORIES.label}</span>
-        <h2 className="mt-3 font-display text-4xl text-soil sm:text-5xl">
-          {STORIES.headline.part1}{" "}
-          <em className="not-italic text-leaf">{STORIES.headline.part2}</em>
+        <span data-reveal className="stories-label text-label">
+          {content.label}
+        </span>
+        <h2 data-reveal className="stories-headline mt-3 font-display text-4xl text-soil sm:text-5xl">
+          {content.headline.part1}{" "}
+          <em className="not-italic text-leaf">{content.headline.part2}</em>
         </h2>
-        <p className="mx-auto mt-5 max-w-2xl text-foreground/75">{STORIES.body}</p>
+        <p data-reveal className="stories-body mx-auto mt-5 max-w-2xl text-foreground/75">
+          {content.body}
+        </p>
 
         <div className="mt-14 grid gap-6 text-left md:grid-cols-3">
-          {STORIES.testimonials.map((t, index) => (
+          {content.testimonials.map((t) => (
             <figure
               key={t.author}
+              data-reveal
               className="story-card rounded-3xl border border-border/60 bg-card p-7 shadow-soft"
-              style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <QuoteIcon />
+              <QuoteIcon className="text-ochre" />
               <blockquote className="mt-4 font-display text-xl leading-snug text-soil">
                 &ldquo;{t.quote}&rdquo;
               </blockquote>
