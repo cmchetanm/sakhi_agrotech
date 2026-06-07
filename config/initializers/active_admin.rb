@@ -20,4 +20,10 @@ ActiveAdmin.setup do |config|
       admin.add_logout_button_to_menu menu
     end
   end
+
+  # Avoid ad-blockers that flag URLs containing "active_admin".
+  config.clear_stylesheets!
+  config.clear_javascripts!
+  config.register_stylesheet "sakhi_admin.css"
+  config.register_javascript "sakhi_admin.js"
 end
