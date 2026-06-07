@@ -60,6 +60,8 @@ group :development do
   gem 'capistrano-rvm', require: false     # or rvm, if you're using rvm
   gem 'capistrano-bundler', require: false
   gem 'capistrano-puma', '~> 0.2.0'
+  gem 'ed25519', '>= 1.2', '< 2.0'
+  gem 'bcrypt_pbkdf', '>= 1.0', '< 2.0'
 end
 
 group :test do
