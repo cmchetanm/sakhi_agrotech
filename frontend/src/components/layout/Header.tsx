@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { NAV_SECTIONS } from "@/lib/constants";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { bindButtonHover, bindNavLinkHover } from "@/lib/animations/hoverEffects";
@@ -30,30 +30,13 @@ export default function Header() {
       ScrollTrigger.create({
         trigger: "#hero",
         start: "bottom top",
-        end: "bottom top",
         onEnter: () => {
-          gsap.to(innerRef.current, {
-            paddingTop: 12,
-            paddingBottom: 12,
-            duration: 0.35,
-            ease: "power2.out",
-          });
-          gsap.to(ref.current, {
-            backgroundColor: "rgba(250, 247, 242, 0.95)",
-            duration: 0.35,
-          });
+          ref.current?.classList.add("site-header--scrolled");
+          innerRef.current?.classList.add("site-header__inner--compact");
         },
         onLeaveBack: () => {
-          gsap.to(innerRef.current, {
-            paddingTop: 16,
-            paddingBottom: 16,
-            duration: 0.35,
-            ease: "power2.out",
-          });
-          gsap.to(ref.current, {
-            backgroundColor: "rgba(250, 247, 242, 0.8)",
-            duration: 0.35,
-          });
+          ref.current?.classList.remove("site-header--scrolled");
+          innerRef.current?.classList.remove("site-header__inner--compact");
         },
         markers: DEV_MARKERS,
       });
@@ -72,9 +55,9 @@ export default function Header() {
   return (
     <header
       ref={ref}
-      className="sticky top-0 z-50 border-b border-border/60 bg-cream/80 backdrop-blur-md"
+      className="site-header sticky top-0 z-50 border-b border-border/60 bg-cream/80 backdrop-blur-md transition-[background-color] duration-300 ease-out"
     >
-      <div ref={innerRef} className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
+      <div ref={innerRef} className="site-header__inner mx-auto flex max-w-7xl items-center justify-between px-5 py-4 transition-[padding] duration-300 ease-out sm:px-8">
         <button
           type="button"
           onClick={() => scrollToSection("hero")}

@@ -11,9 +11,9 @@ export const NAV_SECTIONS = [
 export const HERO = {
   eyebrow: "Kota, Rajasthan · Family-grown since day one",
   headline: {
-    before: "Fresh from our fields ",
-    highlight: "to your table",
-    after: ".",
+    before: "Fresh from our",
+    highlight: "fields",
+    after: " to your table.",
   },
   body: "Reconnecting families with real food, real health, real sustainability — grown without chemicals, harvested with care, delivered in hours.",
   ctaPrimary: "Join Our Community",
@@ -68,7 +68,7 @@ export const WHY_SAKHI = {
 };
 
 export const JOURNEY = {
-  label: "Our Journey",
+  label: "The Story Behind Sakhi.",
   headline: {
     before: "What we're ",
     highlight: "building",
@@ -223,8 +223,8 @@ export const JOIN = {
 };
 
 export const FOOTER = {
-  tagline: "Rooted in Nature.",
-  taglineHighlight: "Driven by Innovation.",
+  tagline: "Innovating the future of rural agriculture.",
+  taglineHighlight: "",
   description: "Organic, farm-to-fork, family-run. Kota, Rajasthan — and growing.",
   explore: [
     { label: "Why Sakhi", href: "#why" },
@@ -234,8 +234,9 @@ export const FOOTER = {
     { label: "Join Our Circle", href: "#join" },
   ],
   contact: {
-    location: "Kota, Rajasthan, India",
+    location: "Vil:Parliya , Teh:Digod , Kota, Rajasthan",
     email: "hello@sakhiagrotech.in",
+    mapsUrl: "https://maps.app.goo.gl/UNeGdzd8zGGS6rWT6",
   },
   copyright: "© 2026 Sakhi Agrotech. All seeds saved.",
   madeIn: "Made with care in Kota.",

@@ -22,12 +22,12 @@ module HomepageDefaults
 
     setting.update!(
       site_name: "Sakhi Agrotech Pvt. Ltd.",
-      tagline: "Rooted in Nature. Driven by Innovation.",
+      tagline: "Innovating the future of rural agriculture.",
       contact_email: "hello@sakhiagrotech.in",
-      footer_tagline: "Rooted in Nature.",
-      footer_tagline_highlight: "Driven by Innovation.",
+      footer_tagline: "Innovating the future of rural agriculture.",
+      footer_tagline_highlight: "",
       footer_description: "Organic, farm-to-fork, family-run. Kota, Rajasthan — and growing.",
-      footer_contact_location: "Kota, Rajasthan, India",
+      footer_contact_location: "Vil:Parliya , Teh:Digod , Kota, Rajasthan",
       footer_copyright: "© 2026 Sakhi Agrotech. All seeds saved.",
       footer_made_in: "Made with care in Kota.",
       footer_instagram_url: "https://instagram.com/sakhiagrotech",
@@ -41,9 +41,9 @@ module HomepageDefaults
 
     hero.update!(
       eyebrow: "Kota, Rajasthan · Family-grown since day one",
-      headline_before: "Fresh from our fields ",
-      headline_highlight: "to your table",
-      headline_after: ".",
+      headline_before: "Fresh from our",
+      headline_highlight: "fields",
+      headline_after: " to your table.",
       body: "Reconnecting families with real food, real health, real sustainability — grown without chemicals, harvested with care, delivered in hours.",
       cta_primary: "Join Our Community",
       cta_secondary: "Learn Our Story",
@@ -81,7 +81,7 @@ module HomepageDefaults
     return if journey.label.present?
 
     journey.update!(
-      label: "Our Journey",
+      label: "The Story Behind Sakhi.",
       headline_before: "What we're ",
       headline_highlight: "building",
       headline_after: ", season by season.",

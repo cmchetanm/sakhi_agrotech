@@ -1,14 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import StaticPhoto from "@/components/ui/StaticPhoto";
 import { bindCardHover, bindLayersTilt } from "@/lib/animations/hoverEffects";
-import { revealFrom, revealSectionIntro } from "@/lib/animations/scrollReveal";
+import { revealFrom, revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
 import { createMatchMedia, getMotionSettings, MEDIA_CONDITIONS, parseConditions } from "@/lib/animations/matchMediaContext";
-import { fadeUpFrom } from "@/lib/animations/presets";
-import { prepareRevealTargets, revealCompleteVars, showRevealTargets } from "@/lib/animations/reveal";
 import type { MergedHomepageContent } from "@/types/api";
 
 const LAYER_BG: Record<string, string> = {
@@ -52,68 +50,24 @@ export default function ResearchSection({ content }: ResearchSectionProps) {
         { start: "top 76%" }
       );
 
+      const mmStats = revealOnScroll(ref.current, ".research-stat", {
+        start: "top 85%",
+        scale: 0.96,
+      });
+
+      const mmArticles = revealOnScroll(ref.current, ".research-article", {
+        start: "top 90%",
+        x: 16,
+      });
+
       let cleanupTilt = () => {};
 
       const mm = createMatchMedia();
       mm.add(MEDIA_CONDITIONS, (context) => {
-        const { isMobile, isDesktop } = parseConditions(context);
+        const { isDesktop } = parseConditions(context);
         const motion = getMotionSettings(context.conditions);
 
-        if (motion.duration === 0) {
-          showRevealTargets(ref.current, ".research-stat, .research-article");
-          return;
-        }
-
-        prepareRevealTargets(ref.current, ".research-stat", motion.travel);
-        prepareRevealTargets(ref.current, ".research-article", motion.travel);
-
-        ScrollTrigger.batch(".research-stat", {
-          start: "top 85%",
-          once: true,
-          onEnter: (batch) => {
-            const pending = batch.filter((el) => el.getAttribute("data-revealed") !== "true");
-            if (!pending.length) return;
-            gsap.fromTo(
-              pending,
-              { ...fadeUpFrom, scale: 0.96 },
-              {
-                ...revealCompleteVars(),
-                duration: motion.duration * 0.8,
-                stagger: motion.stagger,
-                ease: "power2.out",
-                immediateRender: false,
-              }
-            );
-          },
-        });
-
-        ScrollTrigger.batch(".research-article", {
-          start: "top 90%",
-          once: true,
-          onEnter: (batch) => {
-            const pending = batch.filter((el) => el.getAttribute("data-revealed") !== "true");
-            if (!pending.length) return;
-            gsap.fromTo(
-              pending,
-              {
-                ...fadeUpFrom,
-                y: motion.travel,
-                x: (_, el) => {
-                  if (isMobile) return 0;
-                  const idx = gsap.utils.toArray(".research-article", ref.current).indexOf(el);
-                  return idx % 2 === 0 ? -16 : 16;
-                },
-              },
-              {
-                ...revealCompleteVars(),
-                duration: motion.duration,
-                stagger: motion.stagger,
-                ease: "power2.out",
-                immediateRender: false,
-              }
-            );
-          },
-        });
+        if (motion.duration === 0) return;
 
         if (isDesktop) {
           cleanupTilt = bindLayersTilt(ref.current?.querySelector(".research-layers-card") ?? null);
@@ -126,6 +80,8 @@ export default function ResearchSection({ content }: ResearchSectionProps) {
         mmIntro.revert();
         mmPhoto.revert();
         mmLayers.revert();
+        mmStats.revert();
+        mmArticles.revert();
         mm.revert();
         cleanupArticles();
         cleanupTilt();

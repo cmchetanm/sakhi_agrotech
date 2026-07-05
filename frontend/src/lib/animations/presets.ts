@@ -5,11 +5,11 @@ gsap.defaults({ duration: 0.55, ease: "power1.out" });
 export const REVEAL_ATTR = "data-reveal";
 export const REVEALED_ATTR = "data-revealed";
 
-export const fadeUpFrom = { opacity: 0, y: 14 };
+export const fadeUpFrom = { autoAlpha: 0, y: 14 };
 export const fadeUpTo = {
-  opacity: 1,
+  autoAlpha: 1,
   y: 0,
-  clearProps: "transform,opacity",
+  clearProps: "transform",
 };
 
 export const SCRUB_LAG = 1.2;

@@ -11,7 +11,7 @@ import {
   WHY_SAKHI,
 } from "@/content/site";
 import { ICONS, IMAGES } from "@/lib/assets";
-import { normalizeMediaUrl, preferStaticImage } from "@/lib/media";
+import { normalizeMediaUrl } from "@/lib/media";
 import type { HomepageApiResponse, IconKey, MergedHomepageContent } from "@/types/api";
 
 function isPresent(value: unknown): boolean {
@@ -25,7 +25,8 @@ function pickString(value: string | null | undefined, fallback: string): string 
 }
 
 function pickImage(url: string | null | undefined, fallback: string): string {
-  return preferStaticImage(normalizeMediaUrl(url), fallback);
+  const normalized = normalizeMediaUrl(url);
+  return normalized ?? fallback;
 }
 
 function pickIconSrc(
@@ -34,9 +35,7 @@ function pickIconSrc(
   fallbackKey: IconKey
 ): string {
   const normalized = normalizeMediaUrl(uploaded);
-  if (normalized && !normalized.includes("/rails/active_storage")) {
-    return normalized;
-  }
+  if (normalized) return normalized;
 
   const key = (isPresent(iconKey) ? iconKey : fallbackKey) as IconKey;
   return ICONS[key] ?? ICONS[fallbackKey];
@@ -267,6 +266,7 @@ export function mergeHomepageContent(api?: HomepageApiResponse | null): MergedHo
       contact: {
         location: pickString(api?.footer?.contact?.location, FOOTER.contact.location),
         email: pickString(api?.footer?.contact?.email ?? api?.site?.contact_email, FOOTER.contact.email),
+        mapsUrl: FOOTER.contact.mapsUrl,
       },
       copyright: pickString(api?.footer?.copyright, FOOTER.copyright),
       madeIn: pickString(api?.footer?.made_in, FOOTER.madeIn),
@@ -285,7 +285,7 @@ export function mergeHomepageContent(api?: HomepageApiResponse | null): MergedHo
       whatsapp_number: api?.site?.whatsapp_number ?? null,
       youtube_video_id: api?.site?.youtube_video_id ?? null,
       site_name: pickString(api?.site?.site_name, "Sakhi Agrotech Pvt. Ltd."),
-      tagline: pickString(api?.site?.tagline, "Rooted in Nature. Driven by Innovation."),
+      tagline: pickString(api?.site?.tagline, "Innovating the future of rural agriculture."),
       contact_email: pickString(api?.site?.contact_email, FOOTER.contact.email),
     },
   };

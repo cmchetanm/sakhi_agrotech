@@ -130,10 +130,25 @@ h4 {
   @apply py-24 md:py-32;
 }
 
+.site-header--scrolled {
+  background-color: rgba(250, 247, 242, 0.95);
+}
+
+.site-header__inner--compact {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+
+.hero-parallax-layer {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
 /* Hide scroll-reveal targets before GSAP runs — prevents visible→hidden flicker */
 @media (prefers-reduced-motion: no-preference) {
   [data-reveal]:not([data-revealed="true"]) {
     opacity: 0;
+    visibility: hidden;
   }
 }
 

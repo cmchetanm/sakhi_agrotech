@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import Image from "next/image";
+import CmsImage from "@/components/ui/CmsImage";
 import { useGSAP } from "@/lib/gsap";
 import { bindCardHover, bindImageHover } from "@/lib/animations/hoverEffects";
 import { revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
@@ -74,7 +74,7 @@ export default function TeamSection({ content }: TeamSectionProps) {
             >
               <div className="team-avatar relative h-16 w-16 overflow-hidden rounded-full bg-gradient-leaf shadow-soft">
                 {member.photo ? (
-                  <Image
+                  <CmsImage
                     src={member.photo}
                     alt={member.name}
                     fill

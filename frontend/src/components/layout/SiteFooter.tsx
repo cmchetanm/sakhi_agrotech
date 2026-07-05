@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { useGSAP } from "@/lib/gsap";
-import { SITE_NAME } from "@/lib/constants";
+import { SITE_NAME, FARM_MAPS_URL } from "@/lib/constants";
 import { bindSocialHover } from "@/lib/animations/hoverEffects";
 import { revealOnScroll } from "@/lib/animations/scrollReveal";
 import type { MergedHomepageContent } from "@/types/api";
@@ -35,7 +35,7 @@ export default function SiteFooter({ content }: SiteFooterProps) {
 
   useGSAP(
     () => {
-      const mmReveal = revealOnScroll(ref.current, "[data-reveal]", {
+      const mmReveal = revealOnScroll(ref.current, ".footer-block", {
         stagger: 0.1,
       });
 
@@ -55,7 +55,7 @@ export default function SiteFooter({ content }: SiteFooterProps) {
 
       <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 md:grid-cols-12">
-          <div data-reveal className="md:col-span-5">
+          <div data-reveal className="footer-block md:col-span-5">
             <div className="flex items-center gap-2">
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cream font-display text-lg text-soil">
                 स
@@ -63,13 +63,18 @@ export default function SiteFooter({ content }: SiteFooterProps) {
               <span className="font-display text-2xl">{SITE_NAME}</span>
             </div>
             <p className="mt-5 max-w-sm font-display text-xl leading-snug text-cream/90">
-              {content.tagline}{" "}
-              <em className="not-italic text-ochre">{content.taglineHighlight}</em>
+              {content.tagline}
+              {content.taglineHighlight ? (
+                <>
+                  {" "}
+                  <em className="not-italic text-ochre">{content.taglineHighlight}</em>
+                </>
+              ) : null}
             </p>
             <p className="mt-4 max-w-sm text-sm text-cream/70">{content.description}</p>
           </div>
 
-          <div data-reveal className="md:col-span-3">
+          <div data-reveal className="footer-block md:col-span-3">
             <h4 className="font-display text-lg text-ochre">Explore</h4>
             <ul className="mt-4 space-y-2 text-sm text-cream/80">
               {content.explore.map((link) => (
@@ -82,10 +87,19 @@ export default function SiteFooter({ content }: SiteFooterProps) {
             </ul>
           </div>
 
-          <div data-reveal className="md:col-span-4">
+          <div data-reveal className="footer-block md:col-span-4">
             <h4 className="font-display text-lg text-ochre">Find us</h4>
             <ul className="mt-4 space-y-2 text-sm text-cream/80">
-              <li>{content.contact.location}</li>
+              <li>
+                <a
+                  href={content.contact.mapsUrl ?? FARM_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-cream"
+                >
+                  {content.contact.location}
+                </a>
+              </li>
               <li>
                 <a href={`mailto:${content.contact.email}`} className="hover:text-cream">
                   {content.contact.email}
@@ -112,7 +126,7 @@ export default function SiteFooter({ content }: SiteFooterProps) {
 
         <div
           data-reveal
-          className="mt-14 flex flex-col justify-between gap-3 border-t border-cream/15 pt-6 text-xs text-cream/60 sm:flex-row"
+          className="footer-block mt-14 flex flex-col justify-between gap-3 border-t border-cream/15 pt-6 text-xs text-cream/60 sm:flex-row"
         >
           <p>{content.copyright}</p>
           <p>{content.madeIn}</p>

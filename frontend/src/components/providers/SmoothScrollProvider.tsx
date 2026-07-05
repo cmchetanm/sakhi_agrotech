@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useEffect, useRef, type ReactNode } from "react";
 import Lenis from "lenis";
-import { ScrollTrigger } from "@/lib/gsap";
+import { gsap, ScrollTrigger } from "@/lib/gsap";
 
 type ScrollToFn = (target: string | number | HTMLElement, options?: { offset?: number }) => void;
 
@@ -47,13 +47,24 @@ export default function SmoothScrollProvider({ children }: { children: ReactNode
     if (prefersReducedMotion) return;
 
     const lenis = new Lenis({
-      duration: 1.2,
+      lerp: 0.085,
+      duration: 0.8,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      syncTouch: false,
+      wheelMultiplier: 0.9,
     });
     lenisRef.current = lenis;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    let scrollFrame = 0;
+    const onScroll = () => {
+      if (scrollFrame) return;
+      scrollFrame = requestAnimationFrame(() => {
+        ScrollTrigger.update();
+        scrollFrame = 0;
+      });
+    };
+    lenis.on("scroll", onScroll);
 
     ScrollTrigger.scrollerProxy(document.documentElement, {
       scrollTop(value?: number) {
@@ -67,23 +78,33 @@ export default function SmoothScrollProvider({ children }: { children: ReactNode
       },
     });
 
-    let rafId = 0;
-    const raf = (time: number) => {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
+    const ticker = (time: number) => {
+      lenis.raf(time * 1000);
     };
-    rafId = requestAnimationFrame(raf);
+    gsap.ticker.add(ticker);
+    gsap.ticker.lagSmoothing(0);
+
+    let refreshTimer: ReturnType<typeof setTimeout> | undefined;
+    const scheduleRefresh = () => {
+      if (refreshTimer) clearTimeout(refreshTimer);
+      refreshTimer = setTimeout(() => ScrollTrigger.refresh(), 100);
+    };
 
     const onRefresh = () => lenis.resize();
     ScrollTrigger.addEventListener("refresh", onRefresh);
-    ScrollTrigger.refresh();
 
-    const onLoad = () => ScrollTrigger.refresh();
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scheduleRefresh);
+    });
+
+    const onLoad = () => scheduleRefresh();
     window.addEventListener("load", onLoad);
 
     return () => {
-      cancelAnimationFrame(rafId);
+      if (refreshTimer) clearTimeout(refreshTimer);
+      if (scrollFrame) cancelAnimationFrame(scrollFrame);
       window.removeEventListener("load", onLoad);
+      gsap.ticker.remove(ticker);
       lenis.destroy();
       lenisRef.current = null;
       ScrollTrigger.scrollerProxy(document.documentElement, {});

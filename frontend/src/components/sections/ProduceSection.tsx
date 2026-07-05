@@ -5,7 +5,7 @@ import { useGSAP } from "@/lib/gsap";
 import StaticPhoto from "@/components/ui/StaticPhoto";
 import SiteIcon from "@/components/ui/SiteIcon";
 import { bindButtonHover, bindCardHover } from "@/lib/animations/hoverEffects";
-import { revealFrom, revealOnScroll, revealSectionIntro, scrubParallax } from "@/lib/animations/scrollReveal";
+import { revealFrom, revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
 import type { MergedHomepageContent } from "@/types/api";
 
@@ -39,12 +39,6 @@ export default function ProduceSection({ content }: ProduceSectionProps) {
         staggerFrom: "center",
       });
 
-      const mmParallax = scrubParallax(
-        ref.current?.querySelector(".produce-basket-inner"),
-        ref.current,
-        { y: -20, refreshPriority: REFRESH_PRIORITY.produce }
-      );
-
       const cleanupCards = bindCardHover(ref.current?.querySelectorAll(".produce-card") ?? null);
       const cleanupBtn = bindButtonHover(ref.current?.querySelectorAll(".produce-cta-btn") ?? null);
 
@@ -52,7 +46,6 @@ export default function ProduceSection({ content }: ProduceSectionProps) {
         mmIntro.revert();
         mmBasket.revert();
         mmReveal.revert();
-        mmParallax.revert();
         cleanupCards();
         cleanupBtn();
       };

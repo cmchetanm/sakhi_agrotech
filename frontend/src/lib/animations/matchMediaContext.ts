@@ -9,7 +9,7 @@ export const MEDIA_CONDITIONS = {
 export interface MotionSettings {
   travel: number;
   duration: number;
-  scrub: number | false;
+  scrub: number | boolean | false;
   stagger: number;
 }
 
@@ -37,10 +37,10 @@ export function getMotionSettings(conditions?: {
   }
 
   return {
-    travel: isMobile ? 10 : 16,
-    duration: 0.55,
-    scrub: 1.2,
-    stagger: isDesktop ? 0.08 : 0.06,
+    travel: isMobile ? 8 : 14,
+    duration: isMobile ? 0.42 : 0.48,
+    scrub: isMobile ? false : true,
+    stagger: isDesktop ? 0.06 : 0.04,
   };
 }
 

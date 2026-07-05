@@ -5,7 +5,7 @@ import { gsap, useGSAP } from "@/lib/gsap";
 import clsx from "clsx";
 import { createMatchMedia, getMotionSettings, MEDIA_CONDITIONS, parseConditions } from "@/lib/animations/matchMediaContext";
 import { DEV_MARKERS } from "@/lib/animations/presets";
-import { prepareRevealTargets, revealCompleteVars, showRevealTargets } from "@/lib/animations/reveal";
+import { prepareRevealTargets, revealCompleteVars, showRevealTargets, markRevealed } from "@/lib/animations/reveal";
 
 interface ScrubTimelineProps {
   children: ReactNode;
@@ -42,7 +42,7 @@ export default function ScrubTimeline({
         if (isMobile) {
           gsap.fromTo(
             milestones,
-            { opacity: 0, y: motion.travel },
+            { autoAlpha: 0, y: motion.travel },
             {
               ...revealCompleteVars(),
               duration: motion.duration,
@@ -65,39 +65,65 @@ export default function ScrubTimeline({
 
         gsap.set(lineRef.current, { scaleY: 0, transformOrigin: "top center" });
 
-        const tl = gsap.timeline({
+        gsap.to(lineRef.current, {
+          scaleY: 1,
+          ease: "none",
           scrollTrigger: {
             trigger: ref.current,
             start: "top 60%",
             end: "bottom 40%",
-            scrub: motion.scrub || 0.8,
+            scrub: motion.scrub || 0.65,
             markers: DEV_MARKERS,
           },
         });
 
-        tl.to(lineRef.current, { scaleY: 1, ease: "none" });
-
-        milestones.forEach((item, i) => {
-          const dot = item.querySelector(".milestone-dot");
-          tl.fromTo(
-            item,
-            { opacity: 0, x: 20 },
-            {
-              ...revealCompleteVars(),
-              duration: 0.35,
-              ease: "power2.out",
-              immediateRender: false,
+        gsap.fromTo(
+          milestones,
+          { autoAlpha: 0, x: 20 },
+          {
+            autoAlpha: 1,
+            x: 0,
+            duration: motion.duration,
+            stagger: motion.stagger,
+            ease: "power2.out",
+            immediateRender: false,
+            clearProps: "transform",
+            onComplete() {
+              (this.targets() as Element[]).forEach((el) => {
+                markRevealed(el);
+                gsap.set(el, { clearProps: "opacity,visibility" });
+              });
             },
-            i * 0.15
-          );
-          if (dot) {
-            tl.fromTo(
-              dot,
-              { scale: 0.7, opacity: 0 },
-              { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(2)" },
-              i * 0.15
-            );
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 72%",
+              toggleActions: "play none none none",
+              once: true,
+              markers: DEV_MARKERS,
+            },
           }
+        );
+
+        milestones.forEach((item) => {
+          const dot = item.querySelector(".milestone-dot");
+          if (!dot) return;
+          gsap.fromTo(
+            dot,
+            { scale: 0.7, autoAlpha: 0 },
+            {
+              scale: 1,
+              autoAlpha: 1,
+              duration: 0.25,
+              ease: "back.out(2)",
+              immediateRender: false,
+              scrollTrigger: {
+                trigger: item,
+                start: "top 85%",
+                toggleActions: "play none none none",
+                once: true,
+              },
+            }
+          );
         });
       });
     },

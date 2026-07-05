@@ -43,7 +43,7 @@ export default function ScrollReveal({
 
         gsap.fromTo(
           ref.current,
-          { opacity: 0, x, y },
+          { autoAlpha: 0, x, y },
           {
             ...revealCompleteVars(),
             duration: motion.duration,

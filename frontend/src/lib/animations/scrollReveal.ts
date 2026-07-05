@@ -37,14 +37,19 @@ export function revealOnScroll(
     const { isMobile } = parseConditions(context);
     const motion = getMotionSettings(context.conditions);
 
+    if (!scope) return;
+
+    const targets = gsap.utils.toArray<Element>(scope.querySelectorAll(selector));
+    if (!targets.length) return;
+
     if (motion.duration === 0) {
-      showRevealTargets(scope ?? null, selector);
+      showRevealTargets(scope, selector);
       return;
     }
 
     prepareRevealTargets(scope, selector, motion.travel);
 
-    ScrollTrigger.batch(selector, {
+    ScrollTrigger.batch(targets, {
       start,
       once,
       batchMax,
@@ -57,6 +62,7 @@ export function revealOnScroll(
           {
             ...fadeUpFrom,
             y: motion.travel,
+            force3D: true,
             ...(x !== undefined ? { x: isMobile ? 0 : x } : {}),
             ...(scale !== undefined ? { scale } : {}),
           },
@@ -102,6 +108,11 @@ export function revealSectionIntro(
 
     parts.forEach((sel) => prepareRevealTargets(trigger, sel, motion.travel));
 
+    const labelEl = trigger.querySelector(selectors.label);
+    const headlineEl = selectors.headline ? trigger.querySelector(selectors.headline) : null;
+    const bodyEl = selectors.body ? trigger.querySelector(selectors.body) : null;
+    if (!labelEl) return;
+
     const tl = gsap.timeline({
       scrollTrigger: {
         trigger,
@@ -114,8 +125,8 @@ export function revealSectionIntro(
     });
 
     tl.fromTo(
-      selectors.label,
-      { opacity: 0, y: motion.travel * 0.6 },
+      labelEl,
+      { autoAlpha: 0, y: motion.travel * 0.6 },
       {
         ...revealCompleteVars(),
         duration: motion.duration * 0.8,
@@ -123,10 +134,10 @@ export function revealSectionIntro(
       }
     );
 
-    if (selectors.headline) {
+    if (headlineEl) {
       tl.fromTo(
-        selectors.headline,
-        { opacity: 0, y: motion.travel },
+        headlineEl,
+        { autoAlpha: 0, y: motion.travel },
         {
           ...revealCompleteVars(),
           duration: motion.duration,
@@ -136,16 +147,16 @@ export function revealSectionIntro(
       );
     }
 
-    if (selectors.body) {
+    if (bodyEl) {
       tl.fromTo(
-        selectors.body,
-        { opacity: 0, y: motion.travel * 0.8 },
+        bodyEl,
+        { autoAlpha: 0, y: motion.travel * 0.8 },
         {
           ...revealCompleteVars(),
           duration: motion.duration * 0.9,
           immediateRender: false,
         },
-        selectors.headline ? "-=0.5" : "-=0.35"
+        headlineEl ? "-=0.5" : "-=0.35"
       );
     }
   });
@@ -183,17 +194,19 @@ export function scrubParallax(
   mm.add(MEDIA_CONDITIONS, (context) => {
     const { isMobile, isDesktop } = parseConditions(context);
     const motion = getMotionSettings(context.conditions);
-    if (!target || !trigger || motion.scrub === false) return;
+    if (!target || !trigger || motion.scrub === false || isMobile) return;
 
     const vars: gsap.TweenVars = {
-      y: isMobile ? y * 0.4 : y,
+      y,
       ease: "none",
+      force3D: true,
       scrollTrigger: {
         trigger,
         start: "top bottom",
         end: "bottom top",
         scrub: motion.scrub,
         refreshPriority,
+        invalidateOnRefresh: false,
         markers: DEV_MARKERS,
       },
     };
@@ -229,7 +242,7 @@ export function revealStagger(
 
     gsap.fromTo(
       trigger.querySelectorAll(selector),
-      { opacity: 0, y: motion.travel },
+      { autoAlpha: 0, y: motion.travel },
       {
         ...revealCompleteVars(),
         duration: motion.duration,
@@ -271,7 +284,7 @@ export function revealFrom(
 
     gsap.fromTo(
       trigger.querySelectorAll(selector),
-      { opacity: 0, ...fromVars },
+      { autoAlpha: 0, ...fromVars },
       {
         ...revealCompleteVars(),
         duration: motion.duration,

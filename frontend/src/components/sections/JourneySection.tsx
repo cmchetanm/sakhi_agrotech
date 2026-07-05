@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import { useGSAP } from "@/lib/gsap";
 import StaticPhoto from "@/components/ui/StaticPhoto";
+import HighlightHeadline from "@/components/ui/HighlightHeadline";
 import ScrubTimeline from "@/components/animations/ScrubTimeline";
-import { revealSectionIntro, scrubParallax } from "@/lib/animations/scrollReveal";
+import { revealSectionIntro } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
 import type { MergedHomepageContent } from "@/types/api";
 
@@ -27,15 +28,8 @@ export default function JourneySection({ content }: JourneySectionProps) {
         REFRESH_PRIORITY.journey
       );
 
-      const mmParallax = scrubParallax(
-        ref.current?.querySelector(".journey-photo-img"),
-        ref.current,
-        { y: -20, refreshPriority: REFRESH_PRIORITY.journey }
-      );
-
       return () => {
         mmIntro.revert();
-        mmParallax.revert();
       };
     },
     { scope: ref }
@@ -49,9 +43,11 @@ export default function JourneySection({ content }: JourneySectionProps) {
             {content.label}
           </span>
           <h2 data-reveal className="journey-headline mt-3 font-display text-4xl text-soil sm:text-5xl">
-            {content.headline.before}
-            <em className="not-italic text-leaf">{content.headline.highlight}</em>
-            {content.headline.after}
+            <HighlightHeadline
+              before={content.headline.before}
+              highlight={content.headline.highlight}
+              after={content.headline.after}
+            />
           </h2>
           <p data-reveal className="journey-body mt-5 text-foreground/75">
             {content.body}

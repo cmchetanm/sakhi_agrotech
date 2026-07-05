@@ -175,18 +175,23 @@ export function bindSocialHover(icons: Element | Element[] | NodeListOf<Element>
 export function bindLayersTilt(card: Element | null) {
   if (!card || prefersReducedMotion()) return () => {};
 
-  const quickRotateX = gsap.quickTo(card, "rotationX", { duration: 0.4, ease: "power2.out" });
-  const quickRotateY = gsap.quickTo(card, "rotationY", { duration: 0.4, ease: "power2.out" });
+  const quickRotateX = gsap.quickTo(card, "rotationX", { duration: 0.35, ease: "power2.out" });
+  const quickRotateY = gsap.quickTo(card, "rotationY", { duration: 0.35, ease: "power2.out" });
 
   gsap.set(card, { transformPerspective: 800 });
 
+  let frame = 0;
   const onMove = (e: Event) => {
-    const ev = e as MouseEvent;
-    const rect = card.getBoundingClientRect();
-    const x = (ev.clientX - rect.left) / rect.width - 0.5;
-    const y = (ev.clientY - rect.top) / rect.height - 0.5;
-    quickRotateY(x * 8);
-    quickRotateX(-y * 8);
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      const ev = e as MouseEvent;
+      const rect = card.getBoundingClientRect();
+      const x = (ev.clientX - rect.left) / rect.width - 0.5;
+      const y = (ev.clientY - rect.top) / rect.height - 0.5;
+      quickRotateY(x * 6);
+      quickRotateX(-y * 6);
+    });
   };
   const onLeave = () => {
     quickRotateX(0);
@@ -197,6 +202,7 @@ export function bindLayersTilt(card: Element | null) {
   card.addEventListener("mouseleave", onLeave);
 
   return () => {
+    if (frame) cancelAnimationFrame(frame);
     card.removeEventListener("mousemove", onMove);
     card.removeEventListener("mouseleave", onLeave);
     gsap.set(card, { clearProps: "transform" });

@@ -8,6 +8,7 @@ import { bindButtonHover } from "@/lib/animations/hoverEffects";
 import { scrubParallax } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
 import StaticPhoto from "@/components/ui/StaticPhoto";
+import HighlightHeadline from "@/components/ui/HighlightHeadline";
 import type { MergedHomepageContent } from "@/types/api";
 
 interface HeroSectionProps {
@@ -33,42 +34,22 @@ export default function HeroSection({ content }: HeroSectionProps) {
         prepareRevealTargets(ref.current, HERO_REVEAL, 14);
 
         const tl = gsap.timeline({ defaults: { ease: "power1.out", immediateRender: false } });
-        tl.fromTo(".hero-eyebrow", { opacity: 0, y: 12 }, { ...revealCompleteVars(), duration: 0.5 })
+        tl.fromTo(
+          ".hero-eyebrow, .hero-headline, .hero-body",
+          { autoAlpha: 0, y: 14 },
+          { ...revealCompleteVars(), duration: 0.55, stagger: 0.08 }
+        )
           .fromTo(
-            ".hero-headline",
-            { opacity: 0, y: 18 },
-            { ...revealCompleteVars(), duration: 0.7 },
+            ".hero-cta, .hero-stat",
+            { autoAlpha: 0, y: 10 },
+            { ...revealCompleteVars(), duration: 0.45, stagger: 0.05 },
+            "-=0.25"
+          )
+          .fromTo(
+            ".hero-image-wrap, .hero-quote",
+            { autoAlpha: 0, y: 8 },
+            { ...revealCompleteVars(), duration: 0.55, stagger: 0.08 },
             "-=0.3"
-          )
-          .fromTo(
-            ".hero-body",
-            { opacity: 0, y: 12 },
-            { ...revealCompleteVars(), duration: 0.55 },
-            "-=0.45"
-          )
-          .fromTo(
-            ".hero-cta",
-            { opacity: 0, y: 10 },
-            { ...revealCompleteVars(), duration: 0.45, stagger: 0.06 },
-            "-=0.35"
-          )
-          .fromTo(
-            ".hero-stat",
-            { opacity: 0, y: 10 },
-            { ...revealCompleteVars(), duration: 0.45, stagger: 0.06 },
-            "-=0.3"
-          )
-          .fromTo(
-            ".hero-image-wrap",
-            { opacity: 0 },
-            { ...revealCompleteVars(), duration: 0.65 },
-            "-=0.55"
-          )
-          .fromTo(
-            ".hero-quote",
-            { opacity: 0, y: 10 },
-            { ...revealCompleteVars(), duration: 0.45 },
-            "-=0.35"
           );
 
         if (statsRef.current) {
@@ -80,9 +61,9 @@ export default function HeroSection({ content }: HeroSectionProps) {
         }
 
         const mmParallax = scrubParallax(
-          ref.current?.querySelector(".hero-photo-img"),
+          ref.current?.querySelector(".hero-parallax-layer"),
           ref.current,
-          { y: -24, refreshPriority: REFRESH_PRIORITY.hero }
+          { y: -14, refreshPriority: REFRESH_PRIORITY.hero }
         );
 
         const cleanupHover = bindButtonHover(ref.current?.querySelectorAll(".hero-cta") ?? null);
@@ -115,9 +96,11 @@ export default function HeroSection({ content }: HeroSectionProps) {
             data-reveal
             className="hero-headline mt-6 font-display text-5xl leading-[1.05] text-soil sm:text-6xl lg:text-7xl"
           >
-            {content.headline.before}
-            <em className="not-italic text-leaf">{content.headline.highlight}</em>
-            {content.headline.after}
+            <HighlightHeadline
+              before={content.headline.before}
+              highlight={content.headline.highlight}
+              after={content.headline.after}
+            />
           </h1>
 
           <p data-reveal className="hero-body mt-6 max-w-xl text-lg leading-relaxed text-foreground/75">
@@ -159,14 +142,16 @@ export default function HeroSection({ content }: HeroSectionProps) {
             aria-hidden
           />
           <div className="hero-photo-frame relative z-10 overflow-hidden blob shadow-warm">
-            <StaticPhoto
-              src={content.image}
-              alt="Sakhi Agrotech organic farm at golden hour with rows of fresh vegetables"
-              width={1920}
-              height={1080}
-              priority
-              className="hero-photo-img block h-[28rem] w-full scale-105 object-cover object-center sm:h-[34rem]"
-            />
+            <div className="hero-parallax-layer">
+              <StaticPhoto
+                src={content.image}
+                alt="Sakhi Agrotech organic farm at golden hour with rows of fresh vegetables"
+                width={1920}
+                height={1080}
+                priority
+                className="hero-photo-img block h-[28rem] w-full scale-105 object-cover object-center sm:h-[34rem]"
+              />
+            </div>
           </div>
           <div className="hero-quote absolute bottom-2 left-2 z-20 hidden max-w-[17rem] rounded-2xl bg-cream px-5 py-4 shadow-warm sm:block">
             <p className="font-display text-lg leading-snug text-soil">&ldquo;{content.quote.text}&rdquo;</p>

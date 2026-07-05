@@ -7,6 +7,7 @@ import { bindButtonHover, bindCardHover } from "@/lib/animations/hoverEffects";
 import { revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
 import { markRevealed } from "@/lib/animations/reveal";
+import HighlightHeadline from "@/components/ui/HighlightHeadline";
 import type { MergedHomepageContent } from "@/types/api";
 
 interface JoinSectionProps {
@@ -68,15 +69,18 @@ export default function JoinSection({ content, whatsappNumber }: JoinSectionProp
       if (status !== "success" || !successRef.current) return;
       gsap.fromTo(
         successRef.current,
-        { opacity: 0, y: 16 },
+        { autoAlpha: 0, y: 16 },
         {
-          opacity: 1,
+          autoAlpha: 1,
           y: 0,
           duration: 0.5,
           ease: "power2.out",
-          clearProps: "transform,opacity",
+          clearProps: "transform",
           onComplete() {
-            markRevealed(successRef.current!);
+            if (successRef.current) {
+              markRevealed(successRef.current);
+              gsap.set(successRef.current, { clearProps: "opacity,visibility" });
+            }
           },
         }
       );
@@ -141,9 +145,11 @@ export default function JoinSection({ content, whatsappNumber }: JoinSectionProp
             {content.label}
           </span>
           <h2 data-reveal className="join-headline mt-3 font-display text-4xl text-soil sm:text-5xl">
-            {content.headline.before}
-            <em className="not-italic text-leaf">{content.headline.highlight}</em>
-            {content.headline.after}
+            <HighlightHeadline
+              before={content.headline.before}
+              highlight={content.headline.highlight}
+              after={content.headline.after}
+            />
           </h2>
           <p data-reveal className="join-body mt-5 text-foreground/75">
             {content.body}

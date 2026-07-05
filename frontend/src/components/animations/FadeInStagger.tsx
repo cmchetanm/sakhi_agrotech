@@ -38,7 +38,7 @@ export default function FadeInStagger({
 
         gsap.fromTo(
           ref.current.querySelectorAll(childSelector),
-          { opacity: 0, y: motion.travel },
+          { autoAlpha: 0, y: motion.travel },
           {
             ...revealCompleteVars(),
             duration: motion.duration,
