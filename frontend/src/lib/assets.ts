@@ -3,6 +3,7 @@ export const IMAGES = {
   journey: "/images/journey-sprout.jpg",
   research: "/images/research-farm.jpg",
   produceBasket: "/images/produce-basket.jpg",
+  logo: "/logo.png",
 } as const;
 
 export const ICONS = {
@@ -13,6 +14,8 @@ export const ICONS = {
   valueSoil: "/icons/value-soil.svg",
   valueHeart: "/icons/value-heart.svg",
   produceTomato: "/icons/produce-tomato.svg",
+  produceSuperfood: "/icons/produce-superfood.svg",
+  produceGourd: "/icons/produce-gourd.svg",
   produceGreens: "/icons/produce-greens.svg",
   produceRoot: "/icons/produce-root.svg",
   produceFruit: "/icons/produce-fruit.svg",

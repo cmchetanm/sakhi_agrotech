@@ -41,6 +41,54 @@ function pickIconSrc(
   return ICONS[key] ?? ICONS[fallbackKey];
 }
 
+/** Map produce card titles to the closest bundled icon when CMS keys are missing or stale. */
+function resolveProduceIconKey(title: string, iconKey: string | null | undefined, index: number): IconKey {
+  const t = title.toLowerCase();
+
+  if (t.includes("tomato")) return "produceTomato";
+  if (t.includes("super food") || t.includes("moringa") || t.includes("amla")) return "produceSuperfood";
+  if (t.includes("gourd") || t.includes("vine") || t.includes("bitter")) return "produceGourd";
+  if (t.includes("fruit") || t.includes("guava") || t.includes("mango") || t.includes("citrus")) {
+    return "produceFruit";
+  }
+  if (
+    t.includes("grain") ||
+    t.includes("pulse") ||
+    t.includes("bajra") ||
+    t.includes("jowar") ||
+    t.includes("wheat")
+  ) {
+    return "produceGrain";
+  }
+  if (
+    t.includes("herb") ||
+    t.includes("aromatic") ||
+    t.includes("tulsi") ||
+    t.includes("turmeric") ||
+    t.includes("coriander")
+  ) {
+    return "produceHerb";
+  }
+  if (t.includes("green") || t.includes("leaf") || t.includes("spinach") || t.includes("methi")) {
+    return "produceGreens";
+  }
+  if (t.includes("root") || t.includes("carrot") || t.includes("radish") || t.includes("beet")) {
+    return "produceRoot";
+  }
+
+  if (isPresent(iconKey) && iconKey! in ICONS) return iconKey as IconKey;
+
+  const byIndex: IconKey[] = [
+    "produceTomato",
+    "produceSuperfood",
+    "produceGourd",
+    "produceFruit",
+    "produceGrain",
+    "produceHerb",
+  ];
+  return byIndex[index] ?? "produceTomato";
+}
+
 function pickList<T>(apiList: T[] | undefined | null, fallback: T[]): T[] {
   return apiList && apiList.length > 0 ? apiList : fallback;
 }
@@ -84,31 +132,24 @@ export function mergeHomepageContent(api?: HomepageApiResponse | null): MergedHo
   const produceItems = pickList(
     api?.produce?.items?.map((item, index) => {
       const fallback = PRODUCE.items[index];
-      const fallbackKeys: IconKey[] = [
-        "produceTomato",
-        "produceGreens",
-        "produceRoot",
-        "produceFruit",
-        "produceGrain",
-        "produceHerb",
-      ];
+      const title = pickString(item.title, fallback?.title ?? "");
+      const iconKey = resolveProduceIconKey(title, item.default_icon_key, index);
       return {
-        title: pickString(item.title, fallback?.title ?? ""),
+        title,
         description: pickString(item.description, fallback?.description ?? ""),
         stat: pickString(item.stat, fallback?.stat ?? ""),
-        iconSrc: pickIconSrc(item.icon, item.default_icon_key, fallbackKeys[index] ?? "produceTomato"),
+        iconSrc: pickIconSrc(item.icon, iconKey, iconKey),
       };
     }),
-    PRODUCE.items.map((item, index) => ({
-      title: item.title,
-      description: item.description,
-      stat: item.stat,
-      iconSrc: pickIconSrc(
-        null,
-        null,
-        (["produceTomato", "produceGreens", "produceRoot", "produceFruit", "produceGrain", "produceHerb"] as IconKey[])[index] ?? "produceTomato"
-      ),
-    }))
+    PRODUCE.items.map((item, index) => {
+      const iconKey = resolveProduceIconKey(item.title, null, index);
+      return {
+        title: item.title,
+        description: item.description,
+        stat: item.stat,
+        iconSrc: ICONS[iconKey],
+      };
+    })
   );
 
   const teamMembers =

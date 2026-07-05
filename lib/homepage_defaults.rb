@@ -106,12 +106,12 @@ module HomepageDefaults
       cta: "Order this week's basket →"
     )
     seed_children(produce, :produce_items, [
-      { position: 0, title: "Heirloom Tomatoes", description: "Sun-ripened, sweet-acid balance", stat: "4,200 kg / season", default_icon_key: "produceTomato" },
-      { position: 1, title: "Leafy Greens", description: "Spinach, methi, amaranth — picked at dawn", stat: "3,800 kg / season", default_icon_key: "produceGreens" },
-      { position: 2, title: "Root Vegetables", description: "Carrots, radish, beetroot, sweet potato", stat: "4,000 kg / season", default_icon_key: "produceRoot" },
-      { position: 3, title: "Seasonal Fruits", description: "Guava, papaya, citrus — orchard-fresh", stat: "200 kg, growing fast", default_icon_key: "produceFruit" },
-      { position: 4, title: "Heritage Grains", description: "Bajra, jowar, indigenous wheats", stat: "Trial harvests this season", default_icon_key: "produceGrain" },
-      { position: 5, title: "Herbs & Aromatics", description: "Tulsi, mint, coriander, lemongrass", stat: "Fresh-cut weekly", default_icon_key: "produceHerb" }
+      { position: 0, title: "Tomatoes", description: "Sun-ripened, sweet-acid balance", stat: "4,200 kg / season", default_icon_key: "produceTomato" },
+      { position: 1, title: "Super Food", description: "Moringa & Amla — energizing tomorrow", stat: "3,800 kg / season", default_icon_key: "produceSuperfood" },
+      { position: 2, title: "Gourds & Vines", description: "Bottle gourd, bitter gourd, ridge gourd — vine-fresh", stat: "4,000 kg / season", default_icon_key: "produceGourd" },
+      { position: 3, title: "Seasonal Fruits", description: "Guava, mango, citrus — orchard-fresh", stat: "200 kg, growing fast", default_icon_key: "produceFruit" },
+      { position: 4, title: "Heritage Grains & Pulses", description: "Bajra, jowar, Sonamoti wheat, pulses", stat: "Trial harvests this season", default_icon_key: "produceGrain" },
+      { position: 5, title: "Herbs & Aromatics", description: "Tulsi, coriander, turmeric", stat: "Fresh-cut weekly", default_icon_key: "produceHerb" }
     ])
   end
 

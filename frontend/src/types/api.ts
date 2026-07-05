@@ -123,6 +123,8 @@ export type IconKey =
   | "valueSoil"
   | "valueHeart"
   | "produceTomato"
+  | "produceSuperfood"
+  | "produceGourd"
   | "produceGreens"
   | "produceRoot"
   | "produceFruit"

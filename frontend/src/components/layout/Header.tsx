@@ -1,8 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Image from "next/image";
 import { ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { NAV_SECTIONS } from "@/lib/constants";
+import { IMAGES } from "@/lib/assets";
 import { useSmoothScroll } from "@/components/providers/SmoothScrollProvider";
 import { bindButtonHover, bindNavLinkHover } from "@/lib/animations/hoverEffects";
 import { DEV_MARKERS } from "@/lib/animations/presets";
@@ -63,9 +65,14 @@ export default function Header() {
           onClick={() => scrollToSection("hero")}
           className="group flex items-center gap-2"
         >
-          <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-gradient-leaf font-display text-lg text-cream shadow-soft">
-            स
-          </span>
+          <Image
+            src={IMAGES.logo}
+            alt="Sakhi Agrotech"
+            width={36}
+            height={36}
+            className="h-9 w-9 shrink-0 rounded-full object-cover"
+            priority
+          />
           <span className="font-display text-xl leading-tight text-soil">
             Sakhi <span className="text-leaf">Agrotech</span>
           </span>

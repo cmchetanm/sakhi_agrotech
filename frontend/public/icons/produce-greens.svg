@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <path d="M8 24c2-8 5-12 8-14 3 2 6 6 8 14" fill="#66744a"/>
-  <path d="M16 10v14" stroke="#33482d" stroke-width="1.5"/>
-  <path d="M12 16c2-2 4-2 8 0" stroke="#33482d" stroke-width="1.2"/>
+  <path d="M16 28V12" stroke="#33691E" stroke-width="1.75" stroke-linecap="round"/>
+  <path d="M16 14c-5-2.5-7-7-5.5-11 2.5 1 4 4 5.5 11Z" fill="#2E7D32"/>
+  <path d="M16 14c5-2.5 7-7 5.5-11-2.5 1-4 4-5.5 11Z" fill="#66BB6A"/>
+  <path d="M16 18c-3.5-1.5-5-5-4-8.5 1.5.5 2.8 2.5 4 8.5Z" fill="#388E3C"/>
+  <path d="M16 18c3.5-1.5 5-5 4-8.5-1.5.5-2.8 2.5-4 8.5Z" fill="#43A047"/>
+  <ellipse cx="16" cy="27" rx="7" ry="1.5" fill="#6a4531" opacity="0.2"/>
 </svg>

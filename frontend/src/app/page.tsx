@@ -19,7 +19,7 @@ export default async function HomePage() {
       <HeroSection content={content.hero} />
       <WhySakhiSection content={content.why} />
       <JourneySection content={content.journey} />
-      <ProduceSection content={content.produce} />
+      <ProduceSection content={content.produce} whatsappNumber={content.site.whatsapp_number} />
       <ResearchSection content={content.research} />
       <StoriesSection content={content.stories} />
       <TeamSection content={content.team} />

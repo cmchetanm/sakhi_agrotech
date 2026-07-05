@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { submitContact } from "@/lib/api";
+import { whatsappUrl } from "@/lib/whatsapp";
 import { bindButtonHover, bindCardHover } from "@/lib/animations/hoverEffects";
 import { revealOnScroll, revealSectionIntro } from "@/lib/animations/scrollReveal";
 import { REFRESH_PRIORITY } from "@/lib/animations/refreshPriority";
@@ -13,11 +14,6 @@ import type { MergedHomepageContent } from "@/types/api";
 interface JoinSectionProps {
   content: MergedHomepageContent["join"];
   whatsappNumber?: string | null;
-}
-
-function whatsappUrl(number: string | null | undefined) {
-  const digits = number?.replace(/\D/g, "");
-  return digits ? `https://wa.me/${digits}` : null;
 }
 
 export default function JoinSection({ content, whatsappNumber }: JoinSectionProps) {
